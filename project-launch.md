@@ -33,4 +33,4 @@
 
 # Project Management Tool Setup
 - ZenHub (linked to GitHub)  
-- **Link:** _TBD_
+- **Link:** https://app.zenhub.com/workspaces/g1-683caff0761f53000f948c00/board
