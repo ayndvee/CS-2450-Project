@@ -91,6 +91,7 @@ class UVSIM:
         else:
             print("Not valid opcode")
             return
+        self.instruction_count +=1
 
     #### I/O Operations ####
 
