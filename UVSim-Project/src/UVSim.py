@@ -111,14 +111,14 @@ class UVSIM:
     def branchNeg(self, operand):
         #If the accumulator is negative branch to the new location in memory
         if self.accumulator < 0:
-            self.instruction_count = operand
+            self.branch(operand)
         #Otherwise just move onto the next instruction
         else:
             self.instruction_count += 1
     def branchZero(self, operand):
         #If the accumulator is 0, just to the new location in memory
         if self.accumulator == 0:
-            self.instruction_count = operand
+            self.branch(operand)
         #Otherwise just move onto the next instruction
         else:
             self.instruction_count +=1
