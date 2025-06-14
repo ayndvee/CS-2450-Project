@@ -101,18 +101,24 @@ class UVSIM:
 
     #### Control Operations ####
     def branch(self, operand):
-        self.instruction_count = operand
+        #Check to make sure operand is in the bounds of memory
+        if 0 <= operand < len(self.memory):
+            self.instruction_count = operand
+        #If it isn't aren't stop the program 
+        else:
+            print("Invalid operand: Out of Memory Range")
+            self.halt()
     def branchNeg(self, operand):
         #If the accumulator is negative branch to the new location in memory
         if self.accumulator < 0:
-            self.instruction_count = operand
+            self.branch(operand)
         #Otherwise just move onto the next instruction
         else:
             self.instruction_count += 1
     def branchZero(self, operand):
         #If the accumulator is 0, just to the new location in memory
         if self.accumulator == 0:
-            self.instruction_count = operand
+            self.branch(operand)
         #Otherwise just move onto the next instruction
         else:
             self.instruction_count +=1
