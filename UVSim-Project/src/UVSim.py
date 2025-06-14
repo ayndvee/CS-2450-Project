@@ -10,8 +10,8 @@ class UVSIM:
     def __init__(self):
         #Set up memory and accumulator
         self.memory = [0] * 100
-        self.instruction_count = 0
         self.accumulator = 0
+        self.instruction_count = 0
         self.running = True
 
     def read_file(self, file):
@@ -60,42 +60,66 @@ class UVSIM:
         My thoughts would be to have something like and if statement to find the correct
         opcode and then just call the operation on it as its own function.
         """
-        instruction = self.memory[self.instruction_count]
-        opcode = instruction // 100
-        operand = instruction % 100
-        
-        if opcode == 10:
-            pass
-        elif opcode == 11:
-            pass
-        elif opcode == 20:
-            pass
-        elif opcode == 21:
-            pass
-        elif opcode == 30:
-            pass
-        elif opcode == 31:
-            pass
-        elif opcode == 32:
-            pass
-        elif opcode == 33:
-            pass
-        elif opcode == 40:
-            self.branch(operand)
-        elif opcode ==41:
-            self.branchNeg(operand)
-        elif opcode == 42:
-            self.branchZero(operand)
-        elif opcode == 43:
-            self.halt()
-        else:
-            print("Not valid opcode")
-            return
-        self.instruction_count +=1
+        while self.running:
+            instruction = self.memory[self.instruction_count]
+            opcode = instruction // 100
+            operand = instruction % 100
+
+            if opcode == 10:
+                self.read(operand)
+            elif opcode == 11:
+                self.write(operand)
+            elif opcode == 20:
+                self.load(operand)
+            elif opcode == 21:
+                self.store(operand)
+            elif opcode == 30:
+                pass
+            elif opcode == 31:
+                pass
+            elif opcode == 32:
+                pass
+            elif opcode == 33:
+                pass
+            elif opcode == 40:
+                self.branch(operand)
+                continue
+            elif opcode == 41:
+                self.branchNeg(operand)
+                continue
+            elif opcode == 42:
+                self.branchZero(operand)
+                continue
+            elif opcode == 43:
+                self.halt()
+            else:
+                print(f"Unknown opcode {opcode} at memory[{self.instruction_count}]")
+                self.halt()
+
+            self.instruction_count += 1
+
 
     #### I/O Operations ####
+    def read(self, address):
+        #Reads a signed 4-digit number from user and stores it in memory
+        value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
+        while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
+            print("Invalid input. Please enter a signed 4-digit number like +1234 or -5678.")
+            value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
+        self.memory[address] = int(value)
+
+    def write(self, address):
+        #Prints the value stored at the given memory address
+        print(f"Output from memory[{address}]: {self.memory[address]}")
 
     #### LOAD/STORE Operations ####
+    def load(self, address):
+        #Loads the value from memory into the accumulator
+        self.accumulator = self.memory[address]
+
+    def store(self, address):
+        #Stores the value from the accumulator into memory
+        self.memory[address] = self.accumulator
 
     #### Arithmetic Operations ####
 
