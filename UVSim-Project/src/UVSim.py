@@ -1,6 +1,6 @@
-#Names:
-#Project:
-#Description:
+#Names: Anthony, Brandon, Andie
+#Project: Milestone 2 UVSIM
+
 
 ## IMPORTS
 import sys

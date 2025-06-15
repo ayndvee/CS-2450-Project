@@ -1,3 +1,31 @@
+# CS-2450 Project
+
+## Running the Program
+
+This project uses Python. To run the simulator, use the following command from the project directory:
+
+```
+python UVSim.py <filename>
+```
+
+or
+
+```
+python UVSim.py <path to file>
+```
+
+### Example
+```
+python UVSim.py Test1.txt
+```
+
+#### File Path Example
+```
+python UVSim.py /c/Users/name/Documents/Test1.txt
+```
+
+# Setting up the Project
+
 # Step 1: Set your global git config (only once)
 git config --global user.name "yourusername"
 git config --global user.email "youremail@example.com"
