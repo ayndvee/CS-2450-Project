@@ -30,6 +30,10 @@ class UVSIM:
             ## Next we will just get rid of the white space on the lines so we are only dealing with text
             line = line.strip()
 
+            ## We have reached the end of the file so just stop and don't try to include it
+            if line == '-99999':
+                break
+
             ## If there is an empty line (end the program for now)
             if not line:
                 print(f"Error on line {i}: there is no line")
@@ -47,7 +51,7 @@ class UVSIM:
             #Make sure that we are only reading lines that have only 4 numbers after the sign
             if len(line[1:]) != 4:
                 print(f"Error on line {i}: must be exactly 4 numbers after the sign")
-                break
+                return
 
             
             ## Store the results in memory

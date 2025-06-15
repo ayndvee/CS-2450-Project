@@ -2,7 +2,7 @@
 
 ## Running the Program
 
-This project uses Python. To run the simulator, use the following command from the project directory:
+This project uses Python. To run the simulator, use the following command from the src directory:
 
 ```
 python UVSim.py <filename>
@@ -11,18 +11,27 @@ python UVSim.py <filename>
 or
 
 ```
-python UVSim.py <path to file>
+python UVSim.py <filepath>
 ```
 
 ### Example
+File in the same directory:
 ```
 python UVSim.py Test1.txt
 ```
 
 #### File Path Example
+Full file path for text file:
 ```
 python UVSim.py /c/Users/name/Documents/Test1.txt
 ```
+
+Relative path from project root:
+```
+python ./UVSim-Project/src/UVSim.py Test1.txt
+```
+
+Also make sure that the program you want to run is a BasicML program.
 
 # Setting up the Project
 
