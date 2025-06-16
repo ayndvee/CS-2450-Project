@@ -114,7 +114,8 @@ class UVSIM:
 
     def write(self, address):
         #Prints the value stored at the given memory address
-        print(f"Output from memory[{address}]: {self.memory[address]}")
+        print(f"{self.memory[address]}")
+
 
     #### LOAD/STORE Operations ####
     def load(self, address):
