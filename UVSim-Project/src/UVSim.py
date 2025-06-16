@@ -129,35 +129,11 @@ class UVSIM:
     #### Arithmetic Operations ####
         #Add the value in memory to the accumulator
     def add(self, operand):
-        #If either operand is a string with a + sign, convert it to an int
-        if self.memory[operand][0] == '+':
-            self.memory[operand] = int(self.memory[operand][1:])
-        if self.accumulator[0] == '+':
-            self.accumulator = int(self.accumulator[1:])
-
         self.accumulator += self.memory[operand]
-
-        #If either operand is positive, add a + sign
-        if self.memory[operand] >= 0:
-            self.memory[operand] = (f"+{self.memory[operand]:04d}")
-        if self.accumulator >= 0:
-            self.accumulator = (f"+{self.accumulator:04d}")
 
     #Subtract the value in memory from the accumulator
     def subtract(self, operand):
-        #If either operand is a string with a + sign, convert it to an int
-        if self.memory[operand][0] == '+':
-            self.memory[operand] = int(self.memory[operand][1:])
-        if self.accumulator[0] == '+':
-            self.accumulator = int(self.accumulator[1:])
-
         self.accumulator -= self.memory[operand]
-        
-        #If either operand is positive, add a + sign
-        if self.memory[operand] >= 0:
-            self.memory[operand] = (f"+{self.memory[operand]:04d}")
-        if self.accumulator >= 0:
-            self.accumulator = (f"+{self.accumulator:04d}")
 
     #Divide the accumulator by the value in memory
     def divide(self, operand):
@@ -165,37 +141,12 @@ class UVSIM:
         if self.memory[operand][1:] == 0:
             print("Error: Division by zero")
             return
-        
-        #If either operand is a string with a + sign, convert it to an int
-        if self.memory[operand][0] == '+':
-            self.memory[operand] = int(self.memory[operand][1:])
-        if self.accumulator[0] == '+':
-            self.accumulator = int(self.accumulator[1:])
-
         self.accumulator //= self.memory[operand]
-
-        #If either operand is positive, add a + sign
-        if self.memory[operand] >= 0:
-            self.memory[operand] = (f"+{self.memory[operand]:04d}")
-        if self.accumulator >= 0:
-            self.accumulator = (f"+{self.accumulator:04d}")
 
     #Multiply the accumulator by the value in memory
     def multiply(self, operand):
-        #If either operand is a string with a + sign, convert it to an int
-        if self.memory[operand][0] == '+':
-            self.memory[operand] = int(self.memory[operand][1:])
-        if self.accumulator[0] == '+':
-            self.accumulator = int(self.accumulator[1:])
-
         self.accumulator *= self.memory[operand]
-
-        #If either operand is positive, add a + sign
-        if self.memory[operand] >= 0:
-            self.memory[operand] = (f"+{self.memory[operand]:04d}")
-        if self.accumulator >= 0:
-            self.accumulator = (f"+{self.accumulator:04d}")
-
+        
     #### Control Operations ####
     def branch(self, operand):
         #Check to make sure operand is in the bounds of memory
