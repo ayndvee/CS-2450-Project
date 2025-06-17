@@ -59,4 +59,66 @@ class TestUVSIM(unittest.TestCase):
         self.sim.execute()
         self.assertEqual(self.sim.instruction_count, 1)
 
-        
+    def test_add(self):
+        # memory[30] = 1000, expect accumulator = 1000 after add
+        self.sim.memory[30] = 1000
+        self.sim.accumulator = 500
+        self.sim.add(30)
+        self.assertEqual(self.sim.accumulator, 1500)
+    
+    def test_add_negative(self):
+        # memory[30] = -2000, expect accumulator = -1500 after add
+        self.sim.memory[30] = -2000
+        self.sim.accumulator = 500
+        self.sim.add(30)
+        self.assertEqual(self.sim.accumulator, -1500)
+
+    def test_subtract(self):
+        # memory[30] = 1000, expect accumulator = -500 after subtract
+        self.sim.memory[30] = 1000
+        self.sim.accumulator = 500
+        self.sim.subtract(30)
+        self.assertEqual(self.sim.accumulator, -500)
+
+    def test_subtract_negative(self):
+        # memory[30] = -2000, expect accumulator = 2500 after subtract
+        self.sim.memory[30] = -2000
+        self.sim.accumulator = 500
+        self.sim.subtract(30)
+        self.assertEqual(self.sim.accumulator, 2500)
+
+    def test_multiply(self):
+        # memory[30] = 3, expect accumulator = 1500 after multiply
+        self.sim.memory[30] = 3
+        self.sim.accumulator = 500
+        self.sim.multiply(30)
+        self.assertEqual(self.sim.accumulator, 1500)
+
+    def test_multiply_zero(self):
+        # memory[30] = 0, expect accumulator = 0 after multiply
+        self.sim.memory[30] = 0
+        self.sim.accumulator = 500
+        self.sim.multiply(30)
+        self.assertEqual(self.sim.accumulator, 0)
+
+    def test_multiply_negative(self):
+        # memory[30] = -2, expect accumulator = -1000 after multiply
+        self.sim.memory[30] = -2
+        self.sim.accumulator = 500
+        self.sim.multiply(30)
+        self.assertEqual(self.sim.accumulator, -1000)
+
+    def test_divide(self):
+        # memory[30] = 2, expect accumulator = 250 after divide
+        self.sim.memory[30] = 2
+        self.sim.accumulator = 500
+        self.sim.divide(30)
+        self.assertEqual(self.sim.accumulator, 250)
+
+    def test_divide_zero(self):
+        # memory[30] = 0, expect no change in accumulator and error message
+        self.sim.memory[30] = 0
+        self.sim.accumulator = 500
+        self.sim.divide(30)
+        #Error message is printed, but we can't capture it in this test
+        self.assertEqual(self.sim.accumulator, 500) 

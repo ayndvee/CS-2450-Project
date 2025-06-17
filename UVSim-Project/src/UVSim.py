@@ -138,7 +138,7 @@ class UVSIM:
     #Divide the accumulator by the value in memory
     def divide(self, operand):
         #Check for division by zero
-        if self.memory[operand][1:] == 0:
+        if self.memory[operand] == 0:
             print("Error: Division by zero")
             return
         self.accumulator //= self.memory[operand]
