@@ -1,22 +1,19 @@
 # Meeting Report
 
-**Date:** June 3, 2025  
+**Date:** June 6, 2025  
 **Attendees:** Anthony, Brandon, Andie
 
 ## Agenda
-- Overview of the project
-- Assign feature areas (I/O, arithmetic, control) 
-- Propose a design for each assigned area   
+- Review User Stories and user cases. 
 
 ## Action Items
-All team members will draft 1 user story and 2–4, user cases and contribute to early project planning.
+Check the user cases and user stories for the design document.
 - **Andie:**  
-  - I/O and load/store operations
+  - 1 user story and 2–4, user cases
 - **Brandon:**  
-  - Arithmetic operations
+  - 1 user story and 2–4, user cases
 - **Anthony:**  
-  - Control operations
-  - Create and assign issues in ZenHub   
+  - 1 user story and 2–4, user cases 
 
 ---
 
@@ -36,20 +33,3 @@ The UVSim is a simple but powerful virtual machine that interprets a machine lan
 - Each memory location may contain instructions, data values, or unused space.
 - Instruction format: First two digits = operation code; last two digits = operand (memory address).
 
-# Project Design Proposal
-
-Each team member will come up with a design proposal including:  
-- 1 user story  
-- 2 to 4 use cases  
-
-### Assigned Focus Areas:
-- **Andie:** I/O and load/store operations  
-- **Brandon:** Arithmetic operations  
-- **Anthony:** Control operations
-
-# Question Raised
-
-**What is the difference between a user story and a use case?**
-
-- **User Story:** A brief, high-level description of what a user wants to achieve.  
-- **Use Case:** A detailed step-by-step description of how the system and user interact to accomplish a goal.

@@ -58,3 +58,5 @@ class TestUVSIM(unittest.TestCase):
         self.sim.memory[1] = 4015
         self.sim.execute()
         self.assertEqual(self.sim.instruction_count, 1)
+
+        
