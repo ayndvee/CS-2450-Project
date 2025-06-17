@@ -61,6 +61,18 @@ class TestUVSIM(unittest.TestCase):
         self.sim.execute()
         self.assertEqual(self.sim.instruction_count, 1)
 
+    def test_invalid_instruction_format(self):
+        ## Expected that it should halt if there is a 5 digit number
+        self.sim.memory[0] = 99999  # Invalid 5-digit number
+        self.sim.execute()
+        self.assertFalse(self.sim.running)
+
+    def test_memory_limit_overflow(self):
+        # Expected that it should fail after after the instruction count goes out of memory limit
+        self.sim.instruction_count = 100
+        self.sim.execute()
+        self.assertFalse(self.sim.running)
+
     def test_add(self):
         # memory[30] = 1000, expect accumulator = 1000 after add
         self.sim.memory[30] = 1000
