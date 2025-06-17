@@ -65,6 +65,10 @@ class UVSIM:
         opcode and then just call the operation on it as its own function.
         """
         while self.running:
+            if self.instruction_count >= len(self.memory):
+                print("Error: Instruction pointer out of memory bounds.")
+                self.halt()
+                break
             instruction = self.memory[self.instruction_count]
             opcode = instruction // 100
             operand = instruction % 100
