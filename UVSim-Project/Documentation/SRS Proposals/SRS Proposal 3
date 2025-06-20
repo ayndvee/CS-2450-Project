@@ -4,23 +4,25 @@ Prepared by Anthony Gill
 
 # Functional Requirements
 1. The system shall run BasicML instructions until a HALT instruction or an error occurs.
-2. The system shall load BasicML instructions from a file and store them into memory starting at 0.
+2. The system shall load BasicML instructions from a file and store them in memory starting at 0.
 3. The system shall show the current instruction address and value of accumulator while running
-4. The system shall read a signed 4 digit number from the user when given a READ instruction.
-5. The system shall display text of a 4 digit number from memory when given a WRITE instruction.
-6. The system shall support the ability to do arithmetic controls such as: ADD, SUBTRACT, DIVIDE, Multiply
-7. The system shall load values into accumulator from memory when given LOAD instruction
-8. The system shall store values from accumulator into memory when given STORE instruction
+4. The system shall read a signed 4 digit number from the user when executing a READ instruction.
+5. The system shall display the value of a 4 digit number from memory when executing a WRITE instruction.
+6. The system shall support the ability to do arithmetic controls such as: ADD, SUBTRACT, DIVIDE, MULTIPLY
+7. The system shall load values into the accumulator from memory when executing a LOAD instruction
+8. The system shall store values from the accumulator in memory when executing a STORE instruction
 9. The system shall show an error message and stop running when trying to divide by zero.
-10. The system shall stop running and show error if the memory limit is exceeded.
+10. The system shall stop running and show an error message if the memory limit is exceeded.
 11. The system shall branch to a specific memory location given by the BRANCH instruction.
-12. The system shall have conditional branching. BRANCHNEG if accumulator is less than 0, and BRANCHZERO is accumulator is 0.
+12. The system shall have conditional branching. 
+    -BRANCHNEG if accumulator is less than 0 
+    -BRANCHZERO if accumulator is equal to 0.
 13. The system shall show what instruction that is executed on the GUI
-14. The system shall allow the user to reset the memory and accumulator.
-15. The system shall stop the program if an instruction contains an invalid opcode.
+14. The system shall allow the user to reset the memory and accumulator to initial state.
+15. The system shall display an error message and stop the program if an instruction contains an invalid opcode.
 
 
 # Non-Functional Requirements
 1. The system shall have data integrity while running, making sure that the memory and accumulator are not corrupted.
 2. The system shall include input validation for all user input to help prevent crashes.
-3. The system shall display clear and meaningful error messages for all invalid operations while running.
+3. Error messages shall be displayed within 1 second of detecting an invalid operation to provide timely user feedback.
