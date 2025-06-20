@@ -1,0 +1,196 @@
+# Software Requirements Specification
+## For UVSim Project
+
+Version 0.1  
+Prepared by <author>  
+Group G1
+6/20/25
+
+Table of Contents
+=================
+* [Revision History](#revision-history)
+* 1 [Introduction](#1-introduction)
+  * 1.1 [Document Purpose](#11-document-purpose)
+  * 1.2 [Product Scope](#12-product-scope)
+  * 1.3 [Definitions, Acronyms and Abbreviations](#13-definitions-acronyms-and-abbreviations)
+  * 1.4 [References](#14-references)
+  * 1.5 [Document Overview](#15-document-overview)
+* 2 [Product Overview](#2-product-overview)
+  * 2.1 [Product Perspective](#21-product-perspective)
+  * 2.2 [Product Functions](#22-product-functions)
+  * 2.3 [Product Constraints](#23-product-constraints)
+  * 2.4 [User Characteristics](#24-user-characteristics)
+  * 2.5 [Assumptions and Dependencies](#25-assumptions-and-dependencies)
+  * 2.6 [Apportioning of Requirements](#26-apportioning-of-requirements)
+* 3 [Requirements](#3-requirements)
+  * 3.1 [External Interfaces](#31-external-interfaces)
+    * 3.1.1 [User Interfaces](#311-user-interfaces)
+    * 3.1.2 [Hardware Interfaces](#312-hardware-interfaces)
+    * 3.1.3 [Software Interfaces](#313-software-interfaces)
+  * 3.2 [Functional](#32-functional)
+  * 3.3 [Quality of Service](#33-quality-of-service)
+    * 3.3.1 [Performance](#331-performance)
+    * 3.3.2 [Security](#332-security)
+    * 3.3.3 [Reliability](#333-reliability)
+    * 3.3.4 [Availability](#334-availability)
+  * 3.4 [Compliance](#34-compliance)
+  * 3.5 [Design and Implementation](#35-design-and-implementation)
+    * 3.5.1 [Installation](#351-installation)
+    * 3.5.2 [Distribution](#352-distribution)
+    * 3.5.3 [Maintainability](#353-maintainability)
+    * 3.5.4 [Reusability](#354-reusability)
+    * 3.5.5 [Portability](#355-portability)
+    * 3.5.6 [Cost](#356-cost)
+    * 3.5.7 [Deadline](#357-deadline)
+    * 3.5.8 [Proof of Concept](#358-proof-of-concept)
+* 4 [Verification](#4-verification)
+* 5 [Appendixes](#5-appendixes)
+
+## Revision History
+| Name | Date    | Reason For Changes  | Version   |
+| ---- | ------- | ------------------- | --------- |
+|      |         |                     |           |
+|      |         |                     |           |
+|      |         |                     |           |
+
+## 1. Introduction
+
+### 1.1 Document Purpose
+This document is designed to explicitly define the UVSim project's requirements, ensuring that they can be reasonably incorporated within a reasonable timeframe.
+
+### 1.2 Product Scope
+The UVSim project will function as an interpreter for programs written in the BasicML language.  It will be capable of running programs up to 100 instructions in length, and any given instruction also functions as a variable in memory that can be accessed and modified by the program.
+
+### 1.3 Definitions, Acronyms and Abbreviations
+BasicML:
+- A basic form of machine language written as a series of positive or negative four digit integers.  Certain integers act as operations that can create basic program functionality when combined.
+Word:
+- A four-digit integer, positive or negative, that serves as a single instruction and/or variable in a BasicML program.
+Accumulator:
+- A register in UVSim's memory that holds words before and after load, store, and arithmetic operations.
+
+### 1.4 References
+> None so far, may add some later
+
+### 1.5 Document Overview
+Describe what the rest of the document contains and how it is organized.
+
+## 2. Product Overview
+
+### 2.1 Product Perspective
+The final product of the UVSim project will be unrelated to any other preexisting systems, products, or projects.  The project functions as an interpreter for BasicML, a machine language that was created explicitly for this project.
+
+### 2.2 Product Functions
+UVSim will allow users to load and run preexisting BasicML programs.  BasicML programs can be written by users in their preferred text editor.
+
+### 2.3 Product Constraints
+
+* The project must be finished within 7 weeks of writing this specification.
+* The project must include a user-friendly interface.
+* The project must include a more user-friendly launch method than a command line.
+
+### 2.4 User Characteristics
+
+* Computer science students may use this project as a part of their coursework in learning machine language, using it to test projects they write in BasicML.
+* Computer science instructors may use this project as a part of their curriculum in teaching machine language, using this project to demonstrate example BasicML programs and to test student-written programs.
+
+### 2.5 Assumptions and Dependencies
+This product will be programmed in Python, will use Github and Zenhub for organization, and the team will use Microsoft Teams for communication and team meetings.  If any of these products or services become unavailable for a significant amount of time, the project's development may be delayed.
+
+### 2.6 Apportioning of Requirements
+> TODO
+
+## 3. Requirements
+
+### 3.1 External Interfaces
+> TODO, current interfaces include the GUI, the provided program, UVSim's memory and accumulator
+
+#### 3.1.1 User interfaces
+Define the software components for which a user interface is needed. Describe the logical characteristics of each interface between the software product and the users. This may include sample screen images, any GUI standards or product family style guides that are to be followed, screen layout constraints, standard buttons and functions (e.g., help) that will appear on every screen, keyboard shortcuts, error message display standards, and so on. Details of the user interface design should be documented in a separate user interface specification.
+
+Could be further divided into Usability and Convenience requirements.
+
+#### 3.1.2 Hardware interfaces
+Describe the logical and physical characteristics of each interface between the software product and the hardware components of the system. This may include the supported device types, the nature of the data and control interactions between the software and the hardware, and communication protocols to be used.
+
+#### 3.1.3 Software interfaces
+Describe the connections between this product and other specific software components (name and version), including databases, operating systems, tools, libraries, and integrated commercial components. Identify the data items or messages coming into the system and going out and describe the purpose of each. Describe the services needed and the nature of communications. Refer to documents that describe detailed application programming interface protocols. Identify data that will be shared across software components. If the data sharing mechanism must be implemented in a specific way (for example, use of a global data area in a multitasking operating system), specify this as an implementation constraint.
+
+### 3.2 Functional
+
+* UVSim can read in a program of 100 or fewer words written in BasicML and run it.
+* UVSim can detect improper input in the provided program and provide a corresponding error message instead of attempting to run it.
+* While running a program, UVSim can use a read operation to store a word from the keyboard to a specific location in memory.
+* While running a program, UVSim can use a write operation to write a word from a specific location in memory to the screen.
+* While running a program, UVSim can use a load operation to load a word from a specific location in memory into the accumulator.
+* While running a program, UVSim can use a store operation to store a word from the accumulator in a specific location in memory.
+* While running a program, UVSim can use an add operation to add the values of two words together, storing the result in the accumulator.
+* While running a program, UVSim can use a subtract operation to subtract the value of one word from the value of another, storing the result in the accumulator.
+* While running a program, UVSim can use a multiply operation to multiply the value of two words together, storing the result in the accumulator.
+* While running a program, UVSim can use a divide operation to divide the value of a word by the value of another, storing the result in the accumulator and ignoring the remainder if one exists.
+* While running a program, UVSim can ignore a divide operation if it will cause a divide by 0.
+* While running a program, UVSim can use a branch operation to jump to a specific word in memory, executing its instruction next.
+* While running a program, UVSim can use a conditional branch operation that jumps to a specific word in memory if the value in the accumulator is negative.
+* While running a program, UVSim can use a conditional branch operation that jumps to a specific word in memory if the value in the accumulator is 0.
+* While running a program, UVSim can use a halt operation to stop running the program.
+
+### 3.3 Quality of Service
+> This section states additional, quality-related property requirements that the functional effects of the software should present.
+
+#### 3.3.1 Performance
+* UVSim should be able to load and begin running a properly formatted program in under a second.
+
+#### 3.3.2 Security
+> TODO
+
+#### 3.3.3 Reliability
+* UVSim should run without problems on the vast majority of modern computing systems.
+
+#### 3.3.4 Availability
+* UVSim should run entirely on the client-side and as such should remain available in any situation where the user's system is functional.
+
+### 3.4 Compliance
+> TODO, I don't know if this applies to our project
+Specify the requirements derived from existing standards or regulations, including:  
+* Report format
+* Data naming
+* Accounting procedures
+* Audit tracing
+
+For example, this could specify the requirement for software to trace processing activity. Such traces are needed for some applications to meet minimum regulatory or financial standards. An audit trace requirement may, for example, state that all changes to a payroll database shall be recorded in a trace file with before and after values.
+
+### 3.5 Design and Implementation
+
+#### 3.5.1 Installation
+UVSim can be installed entirely on the client-side, and should function on a wide variety of common systems.
+
+#### 3.5.2 Distribution
+> TODO
+Constraints on software components to fit the geographically distributed structure of the host organization, the distribution of data to be processed, or the distribution of devices to be controlled.
+
+#### 3.5.3 Maintainability
+Once launched, maintenance may be done via the release of new versions of UVSim.
+These new versions may have new features, but should usually be released to fix new bugs and other problems in the previous version.
+
+#### 3.5.4 Reusability
+<!-- TODO: come up with a description -->
+
+#### 3.5.5 Portability
+UVSim is written in python and as such should be easily portable to other systems.
+
+#### 3.5.6 Cost
+As a UVU resource, UVSim should be free to students and faculty.
+
+#### 3.5.7 Deadline
+UVSim is expected to be complete before August 8, 2025.
+
+#### 3.5.8 Proof of Concept
+The contents of the repository containing this document also contains a command line prototype of the UVSim software.  This prototype lacks user-friendliness, but functions as a proof-of-concept that the project can be made to fulfill all of the previously specified requirements.
+
+## 4. Verification
+> This section provides the verification approaches and methods planned to qualify the software. The information items for verification are recommended to be given in a parallel manner with the requirement items in Section 3. The purpose of the verification process is to provide objective evidence that a system or system element fulfills its specified requirements and characteristics.
+
+<!-- TODO: give more guidance, similar to section 3 -->
+<!-- ieee 15288:2015 -->
+
+## 5. Appendixes
