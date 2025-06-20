@@ -1,0 +1,38 @@
+# UVSim Software Requirements Specification (SRS)
+**Prepared by:** Andres Merino 
+**Date:** 06/20/2025
+
+---
+
+
+UVSim is a virtual machine designed to help computer science students understand machine language and computer architecture. It interprets a simplified machine language called BasicML. UVSim features a CPU, memory, and an accumulator register and can execute programs using arithmetic, I/O, and control flow instructions. This document is giving the design requirements:
+
+---
+
+## Functional Requirements
+
+1. The system shall load a BasicML program from a file into memory starting at location 00.
+2. The system shall initialize memory with 100 words.
+3. The system shall execute BasicML instructions starting from memory location 00.
+4. The system shall interpret and execute the READ instruction to store input in memory.
+5. The system shall interpret and execute the WRITE instruction to print memory contents to the console.
+6. The system shall interpret and execute the LOAD instruction to load memory into the accumulator.
+7. The system shall interpret and execute the STORE instruction to save the accumulator's contents to memory.
+8. The system shall interpret and execute ADD, SUBTRACT, MULTIPLY, and DIVIDE using values from memory and update the accumulator.
+9. The system shall raise an error if a divide-by-zero occurs during a DIVIDE operation.
+10. The system shall interpret and execute the BRANCH instruction to jump to a specified memory location.
+11. The system shall interpret and execute the BRANCHNEG instruction if the accumulator is negative.
+12. The system shall interpret and execute the BRANCHZERO instruction if the accumulator is zero.
+13. The system shall halt execution when a HALT instruction is encountered.
+14. The system shall reject invalid opcodes and display a descriptive error message.
+15. The system shall support console-based user interaction for input and output operations.
+
+---
+
+## Non-Functional Requirements
+
+1. The system shall be implemented in Python and run in a terminal/command-line environment.
+2. The system shall provide a response time of 2 seconds.
+3. The system shall be modular and maintainable.
+
+
