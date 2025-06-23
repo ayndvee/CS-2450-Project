@@ -1,0 +1,28 @@
+# SRS Proposal 5
+Merged from Proposal 2 by Andie and Proposal 3 by Anthony
+
+Prepared by Brandon Walton
+
+## Functional Requirements
+
+1. The system shall load a BasicML program from file into memory starting at location 0.
+2. The system shall initialize memory with up to 100 words.
+3. The system shall execute BasicML instructions starting from memory at location 0.
+4. The system shall read a signed 4 digit integer from the user when executing a READ instruction.
+5. The system shall display the value of a signed 4 digit integer from memory when executing a WRITE instruction.
+6. The system shall load values into the accumulator from memory when executing a LOAD instruction.
+7. The system shall store values from the accumulator in memory when executing a STORE instruction.
+8. The system shall interpret and execute ADD, SUBTRACT, MULTIPLY, and DIVIDE instructions using values from memory and update the accumulator.
+9. The system shall show an error message and halt when attempting to divide by 0.
+10. The system shall interpret and execute the BRANCH instruction to jump to a specified location in memory.
+11. The system shall interpret and execute the BRANCHNEG instruction to branch if the value in the accumulator is less than 0.
+12. The system shall interpret and execute the BRANCHZERO instruction if the value in the accumulator is equal to 0.
+13. The system shall support console-based user interaction for input and output operations.
+14. The system shall display an error message if an instruction contains an invalid opcode.
+15. The system shall allow the user to reset the memory and accumulator to their initial states.
+
+## Non-Functional Requirements
+
+1. The system shall provide a response time of 2 seconds.
+2. The system shall be modular and maintainable.
+3. The system shall have data integrity while running, making sure that the memory and accumulator are not corrupted.
