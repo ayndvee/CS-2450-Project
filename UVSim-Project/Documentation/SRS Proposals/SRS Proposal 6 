@@ -1,0 +1,37 @@
+# UVSim Software Requirements Specification (SRS)
+Andie Merino
+Merged from Proposal 1 by Brandon and Proposal 3 by Anthony
+**Date:** 06/24/2025
+
+
+## Functional Requirements
+
+1. The system shall load a BasicML program of up to 100 instructions into memory starting at address 0.
+2. The system shall execute instructions sequentially until a HALT instruction or an error occurs.
+3. The system shall validate programs before execution and stop with an error if the program contains invalid opcodes or exceeds memory limits.
+4. The system shall execute a READ instruction by accepting a signed 4-digit integer from the user and storing it at a specified memory location.
+5. The system shall execute a WRITE instruction by displaying the value from a specified memory address on the screen.
+6. The system shall load a value from memory into the accumulator when executing a LOAD instruction.
+7. The system shall store the accumulator's value in memory when executing a STORE instruction.
+8. The system shall perform arithmetic operations (ADD, SUBTRACT, MULTIPLY, DIVIDE) using values from memory and store results in the accumulator.
+9. The system shall halt execution and display an error message when division by zero is attempted.
+10. The system shall execute a BRANCH instruction by unconditionally jumping to a specified memory address.
+11. The system shall execute a BRANCHNEG instruction when the accumulator contains a negative value.
+12. The system shall execute a BRANCHZERO instruction when the accumulator contains zero.
+13. The system shall display the current instruction address and accumulator value during execution.
+14. The system shall allow the user to reset the memory and accumulator to their initial state.
+15. The system shall visually display the currently executing instruction and memory state in the GUI.
+---
+
+## Non-Functional Requirements
+
+1. **Performance and Responsiveness**
+   - The system shall begin executing a valid program in under 1 second.
+   - Error messages shall be shown within 1 second of encountering an invalid operation or system fault.
+
+2. **System Compatibility and Portability**
+   - The system shall run entirely on the client-side and function reliably on modern operating systems without requiring installation of additional software.
+
+3. **Robustness and Input Validation**
+   - The system shall ensure memory and accumulator integrity throughout execution.
+   - All user input, including numbers and file contents, shall be validated to prevent unexpected behavior or crashes.
