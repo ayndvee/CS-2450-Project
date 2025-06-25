@@ -26,7 +26,7 @@ class UVSIM:
             ## If we go over the memory limit we will just end the program 
             if i >=100:
                 print("Error too many lines for memory capacity")
-                return
+                return False
             ## Next we will just get rid of the white space on the lines so we are only dealing with text
             line = line.strip()
 
@@ -37,25 +37,26 @@ class UVSIM:
             ## If there is an empty line (end the program for now)
             if not line:
                 print(f"Error on line {i}: there is no line")
-                return
+                return False
             
             ## If we are reading a line and there is not signed number (end it for now)
             if not line[0] in '+-':
                 print(f"Error on line {i}: must be signed with + or -")
-                return
+                return False
             
             ## If we are reading after the +- sign and it isn't a number (end the program for now)
             if not line[1:].isdigit():
                 print(f"Error on line {i}: must be numbers after the sign")
-                return
+                return False
             #Make sure that we are only reading lines that have only 4 numbers after the sign
             if len(line[1:]) != 4:
                 print(f"Error on line {i}: must be exactly 4 numbers after the sign")
-                return
+                return False
 
             
             ## Store the results in memory
             self.memory[i] = int(line)
+        return True
 
     def execute(self):
         #Loops through the memory and performs the action for each opcode
