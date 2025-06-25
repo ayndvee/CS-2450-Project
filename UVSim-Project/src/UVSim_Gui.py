@@ -1,0 +1,151 @@
+## UVSim GUI
+
+## IMPORTS
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from UVSim import UVSIM
+
+class UVSIMGUI:
+    def __init__(self, root, sim):
+        self.root = root
+        self.sim = sim
+        self.labels = []
+        self.mem_start = 0
+        root.title("UVSIM")
+
+        ## Create the memory title and the memory layout
+        tk.Label(root, text="Memory").pack(pady=(10, 0))
+        memory_frame = tk.LabelFrame(root, padx=10, pady=10, borderwidth=2, relief="groove")
+        memory_frame.pack(padx=10, pady=10)
+
+        for row in range(2):
+            row_labels = []
+            for col in range(5):
+                addr_label = tk.Label(memory_frame, text="Addr: --", width= 12)
+                val_label = tk.Label(memory_frame, text= "Value: ----",width=14)
+                addr_label.grid(row = row*2, column= col, padx=4)
+                val_label.grid(row=row*2+1, column=col, padx=4)
+                row_labels.append((addr_label,val_label))
+            self.labels.append(row_labels)
+
+
+        ## Creates the previous and Next button and their layout
+        navigation = tk.Frame(root)
+        navigation.pack(fill=tk.X, pady=5)
+
+        prev_button = tk.Button(navigation, text="Prev 10", command=self.prev_memory)
+        prev_button.grid(row=0, column=0, sticky='w', padx=10)
+
+        next_button = tk.Button(navigation, text="Next 10", command=self.next_memory)
+        next_button.grid(row=0, column=10, sticky='e', padx=10)
+
+        navigation.grid_columnconfigure(0, weight=1)
+        navigation.grid_columnconfigure(1, weight=1)
+
+        ## Creates the accumulator and Instruction # labels and amounts
+        status_frame = tk.Frame(root)
+        status_frame.pack(pady=5)
+
+        self.accumlator_label = tk.Label(status_frame, text= "Accumulator: +0000", width=20, anchor='w')
+        self.accumlator_label.pack(side=tk.LEFT, padx=10)
+        
+        self.instruction_label = tk.Label(status_frame, text= "Instruction #: 00", width=20, anchor='w')
+        self.instruction_label.pack(side=tk.LEFT, padx=10)
+
+        ## Creates the Submit Input text box and button
+        input_frame = tk.Frame(root)
+        input_frame.pack(pady=5)
+        self.input_entry = tk.Entry(input_frame, width=10)
+        self.input_entry.pack(side=tk.LEFT, padx=(0,5))
+        tk.Button(input_frame, text="Submit Input", command=self.submit_input).pack(side=tk.LEFT)
+
+
+        ## Creates the Run, Step, Pause, and Reset buttons and has their layout
+        control_frame = tk.Frame(root)
+        control_frame.pack(fill=tk.X)
+        tk.Button(control_frame, text="Run", command=self.run).pack(side=tk.LEFT, padx=30)
+        tk.Button(control_frame, text="Step", command=self.step).pack(side=tk.LEFT, padx=80)
+        tk.Button(control_frame, text="Pause", command=self.pause).pack(side=tk.LEFT, padx=80)
+        tk.Button(control_frame, text="Reset", command=self.reset).pack(side=tk.LEFT, padx=30)
+
+        ## Creates the Load Program Button
+        tk.Button(root, text="Load Program", command=self.load_program).pack(pady=5)
+
+        ## Creates the Output label and its box
+        tk.Label(root, text="Output:").pack()
+        self.output_box= tk.Text(root, height=8, width=50, state='disabled')
+        self.output_box.pack()
+
+        self.update_display()
+
+    def update_display(self):
+        # Update memory display for addresses from memory_start to memory_start+9
+        for i, row_labels in enumerate(self.labels):
+            for j, (addr_label, val_label) in enumerate(row_labels):
+                mem_index = self.mem_start + i*5 + j
+                try:
+                    value = self.sim.memory[mem_index]
+                    # Make it a signed 4 digit value
+                    value_str = f"{value:+05d}"
+                except IndexError:
+                    value_str = "----"
+                
+                addr_label.config(text=f"Addr: {mem_index:02d}")
+                val_label.config(text=f"Value: {value_str}")
+
+        # Update accumulator label
+        acc_value = getattr(self.sim, "accumulator", 0)
+        self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
+
+        # Update instruction number label
+        instr_num = getattr(self.sim, "instruction_counter", 0)
+        self.instruction_label.config(text=f"Instruction #: {instr_num:02d}")
+
+    def load_program(self):
+        ##This opens up the file explorer for the user to select a file
+        file_path = filedialog.askopenfilename(filetypes=[("Text file", "*.txt")])
+        if file_path:
+            if self.sim.read_file(file_path):
+                self.print_output("File read successfully")
+                self.update_display()
+
+            else:
+                self.print_output("File couldn't be read")
+    
+    #Gets the 10 previous Memory locations
+    def prev_memory(self):
+        self.mem_start = max(0, self.mem_start - 10)
+        self.update_display()
+
+    #Gets the 10 next Memory locations
+    def next_memory(self):
+        self.mem_start = min(len(self.sim.memory) - 10, self.mem_start + 10)
+        self.update_display()
+
+    #Prints messages to the Output location
+    def print_output(self, message):
+        self.output_box.config(state='normal')
+        self.output_box.delete('1.0', tk.END) #Makes it so only 1 line of text is in the output at any given time. (We can change if needed)
+        self.output_box.insert(tk.END, message + "\n")
+        self.output_box.config(state='disabled')
+
+    ########## THESE ARE SOME OF THE FUNCTIONS THAT NEED TO BE MADE #####
+      
+    def run(self):
+        pass
+    def step(self):
+        pass
+    def pause(self):
+        pass
+    def reset(self):
+        ## Probably need to make a reset function in UVSIM to handle this
+        pass
+    def submit_input(self):
+        ## Something probably needs to be changed about how we get input because it will still ask on the console instead of the GUI
+        pass
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    sim = UVSIM()
+    gui = UVSIMGUI(root, sim)
+    root.mainloop()
