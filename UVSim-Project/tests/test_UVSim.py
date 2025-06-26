@@ -1,9 +1,9 @@
 import unittest
-from src.UVSim import UVSIM
+from core.UVSim import UVSIM
 from unittest.mock import patch
 from io import StringIO
 
-### HERE is how to run the tests PYTHONPATH=src python -m unittest discover -s tests ###
+### HERE is how to run the tests PYTHONPATH=./src python -m unittest discover -s tests ###
 
 
 
@@ -64,8 +64,8 @@ class TestUVSIM(unittest.TestCase):
     def test_invalid_instruction_format(self):
         ## Expected that it should halt if there is a 5 digit number
         self.sim.memory[0] = 99999  # Invalid 5-digit number
-        self.sim.execute()
-        self.assertFalse(self.sim.running)
+        with self.assertRaises(RuntimeError):
+            self.sim.execute()
 
     def test_memory_limit_overflow(self):
         # Expected that it should fail after after the instruction count goes out of memory limit
