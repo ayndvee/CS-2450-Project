@@ -4,12 +4,16 @@
 
 ## IMPORTS
 import sys
+from typing import Callable
 
+
+MEMORYSIZE = 100
+WORD_DIGITS = 4
 
 class UVSIM:
     def __init__(self):
         #Set up memory and accumulator
-        self.memory = [0] * 100
+        self.memory = [0] * MEMORYSIZE
         self.accumulator = 0
         self.instruction_count = 0
         self.running = True
@@ -24,7 +28,7 @@ class UVSIM:
         ## Enumerate adds a counter to the lines so we can count how many we have, so we don't go over the memory limit
         for i, line in enumerate(lines):
             ## If we go over the memory limit we will just end the program 
-            if i >=100:
+            if i >= MEMORYSIZE:
                 print("Error too many lines for memory capacity")
                 return False
             ## Next we will just get rid of the white space on the lines so we are only dealing with text
@@ -49,7 +53,7 @@ class UVSIM:
                 print(f"Error on line {i}: must be numbers after the sign")
                 return False
             #Make sure that we are only reading lines that have only 4 numbers after the sign
-            if len(line[1:]) != 4:
+            if len(line[1:]) != WORD_DIGITS:
                 print(f"Error on line {i}: must be exactly 4 numbers after the sign")
                 return False
 
@@ -57,6 +61,21 @@ class UVSIM:
             ## Store the results in memory
             self.memory[i] = int(line)
         return True
+
+    OPCODES: dict[int, Callable[["UVSIM", int], None]] = {
+        10: "read",
+        11: "write",
+        20: "load",
+        21: "store",
+        30: "add",
+        31: "subtract",
+        32: "multiply",
+        33: "divide",
+        40: "branch",
+        41: "branchNeg",
+        42: "branchZero",
+        43: "halt"
+    }
 
     def execute(self):
         #Loops through the memory and performs the action for each opcode
@@ -66,44 +85,17 @@ class UVSIM:
         opcode and then just call the operation on it as its own function.
         """
         while self.running:
-            if self.instruction_count >= len(self.memory):
+            if self.instruction_count >= MEMORYSIZE:
                 print("Error: Instruction pointer out of memory bounds.")
                 self.halt()
                 break
-            instruction = self.memory[self.instruction_count]
-            opcode = instruction // 100
-            operand = instruction % 100
-
-            if opcode == 10:
-                self.read(operand)
-            elif opcode == 11:
-                self.write(operand)
-            elif opcode == 20:
-                self.load(operand)
-            elif opcode == 21:
-                self.store(operand)
-            elif opcode == 30:
-                self.add(operand)
-            elif opcode == 31:
-                self.subtract(operand)
-            elif opcode == 32:
-                self.divide(operand)
-            elif opcode == 33:
-                self.multiply(operand)
-            elif opcode == 40:
-                self.branch(operand)
-                continue
-            elif opcode == 41:
-                self.branchNeg(operand)
-                continue
-            elif opcode == 42:
-                self.branchZero(operand)
-                continue
-            elif opcode == 43:
-                self.halt()
-            else:
-                print(f"Unknown opcode {opcode} at memory[{self.instruction_count}]")
-                self.halt()
+            code, op = divmod(self.memory[self.instruction_count], 100)
+    
+            method = self.OPCODES.get(code)
+            if method is None:
+                raise RuntimeError(f"Unknown opcode {code} at Instruction {self.instruction_count}")
+            handler = getattr(self, method)
+            handler(op)
 
             self.instruction_count += 1
 
@@ -165,30 +157,13 @@ class UVSIM:
         #If the accumulator is negative branch to the new location in memory
         if self.accumulator < 0:
             self.branch(operand)
-        #Otherwise just move onto the next instruction
-        else:
-            self.instruction_count += 1
+        
     def branchZero(self, operand):
         #If the accumulator is 0, just to the new location in memory
         if self.accumulator == 0:
             self.branch(operand)
-        #Otherwise just move onto the next instruction
-        else:
-            self.instruction_count +=1
-    def halt(self):
+        
+    def halt(self, _=None):
         #Set running to false because we are stopping the program.
         self.running = False
 
-def run(file):
-    sim = UVSIM()
-    sim.read_file(file)
-    sim.execute()
-
-if __name__ == "__main__":
-    ## Check to make sure that a file was input on the Command line
-    ## If not then we tell the user the usage and exit the program
-    ## Otherwise we just run the program with the file.
-    if len(sys.argv) != 2:
-        print("Usage: python UVSim.py <filename>")
-        sys.exit(1)
-    run(sys.argv[1])

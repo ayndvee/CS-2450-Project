@@ -1,9 +1,11 @@
 ## UVSim GUI
 
 ## IMPORTS
+import sys
+import os
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from UVSim import UVSIM
+from core.UVSim import UVSIM
 
 class UVSIMGUI:
     def __init__(self, root, sim):
@@ -79,6 +81,9 @@ class UVSIMGUI:
         self.update_display()
 
     def update_display(self):
+        self.update_memory_display()
+        self.update_status()
+    def update_memory_display(self):
         # Update memory display for addresses from memory_start to memory_start+9
         for i, row_labels in enumerate(self.labels):
             for j, (addr_label, val_label) in enumerate(row_labels):
@@ -92,7 +97,7 @@ class UVSIMGUI:
                 
                 addr_label.config(text=f"Addr: {mem_index:02d}")
                 val_label.config(text=f"Value: {value_str}")
-
+    def update_status(self):
         # Update accumulator label
         acc_value = getattr(self.sim, "accumulator", 0)
         self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
@@ -143,9 +148,3 @@ class UVSIMGUI:
     def submit_input(self):
         ## Something probably needs to be changed about how we get input because it will still ask on the console instead of the GUI
         pass
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    sim = UVSIM()
-    gui = UVSIMGUI(root, sim)
-    root.mainloop()
