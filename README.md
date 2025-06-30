@@ -29,18 +29,18 @@ Once the GUI is up an running you will then be able to input the file and test i
 ### Example
 File in the same directory:
 ```
-python UVSim.py Test1.txt
+python main.py Test1.txt
 ```
 
 #### File Path Example
 Full file path for text file:
 ```
-python UVSim.py /c/Users/name/Documents/Test1.txt
+python main.py /c/Users/name/Documents/Test1.txt
 ```
 
 Relative path from project root:
 ```
-python ./UVSim-Project/src/UVSim.py Test1.txt
+python ./UVSim-Project/src/main.py Test1.txt
 ```
 
 
