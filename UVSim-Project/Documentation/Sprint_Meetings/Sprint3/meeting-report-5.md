@@ -1,10 +1,11 @@
 # Meeting Report
 
 **Date:** June 17, 2025
-**Attendees:** Anthony, Brandon, Andie
+**Attendees:** Anthony (Scrum Master), Brandon (Meeting Recorder), Andie (Project Manager)
 
 ## Agenda
 - Overview of milestone 3 and next steps
+- Team member role changes
 - Creation of project software requirements specification (SRS)
 
 ## Action Items
