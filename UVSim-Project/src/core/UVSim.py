@@ -93,7 +93,7 @@ class UVSIM:
     
             method = self.OPCODES.get(code)
             if method is None:
-                raise RuntimeError(f"Unknown opcode {code} at Instruction {self.instruction_count}")
+                raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
             handler = getattr(self, method)
             handler(op)
 
