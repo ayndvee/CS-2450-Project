@@ -1,7 +1,7 @@
 # Meeting Report
 
 **Date:** June 24, 2025
-**Attendees:** Anthony, Brandon, Andie
+**Attendees:** Anthony (Scrum Master), Brandon (Meeting Recorder), Andie (Project Manager)
 
 ## Agenda
 - Overview of merged SRS proposals
