@@ -4,6 +4,8 @@
 import sys
 import os
 import tkinter as tk
+import threading
+import time
 from tkinter import filedialog, messagebox
 from core.UVSim import UVSIM
 
@@ -137,11 +139,45 @@ class UVSIMGUI:
     ########## THESE ARE SOME OF THE FUNCTIONS THAT NEED TO BE MADE #####
       
     def run(self):
-        pass
+        """Run program continuously in a separate thread."""
+        if getattr(self, "running", False):
+            return  # Already running
+        self.running = True
+        self.paused = False
+
+        def execute_loop():
+            while self.running and self.sim.running:
+                if self.paused:
+                    break
+                self.step()
+                time.sleep(0.5)  # Adjust execution speed here
+            self.running = False  # Clean up when done
+
+        threading.Thread(target=execute_loop, daemon=True).start()
+
     def step(self):
-        pass
+        """Execute a single instruction and update GUI."""
+        try:
+            if self.sim.running:
+                code, op = divmod(self.sim.memory[self.sim.instruction_count], 100)
+                method = self.sim.OPCODES.get(code)
+                if method is None:
+                    raise RuntimeError(f"Unknown opcode: {code}")
+                handler = getattr(self.sim, method)
+                handler(op)
+                self.sim.instruction_count += 1
+                self.update_display()
+        except ZeroDivisionError as e:
+            self.print_output(f"Error: {e}")
+            self.pause()
+        except Exception as e:
+            self.print_output(f"Execution error: {e}")
+            self.pause()
+
     def pause(self):
-        pass
+        """Pause program execution."""
+        self.paused = True
+        self.running = False
     def reset(self):
         ## Probably need to make a reset function in UVSIM to handle this
         pass
