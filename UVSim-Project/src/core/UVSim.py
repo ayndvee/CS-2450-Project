@@ -14,9 +14,14 @@ class UVSIM:
     def __init__(self) -> None:
         """Set up memory and accumulator"""
         self.memory = [0] * MEMORYSIZE
+        self.spareMemory = [0] * MEMORYSIZE
         self.accumulator = 0
         self.instruction_count = 0
         self.running = True
+        self.gui = False  # Flag to indicate if running in GUI mode
+        self.input = -99999  # Holds input from the user in GUI mode
+        self.output = False  # Determines if the program is outputting to the gui
+        self.outputValue = ""  # Holds output value for GUI display
 
     def read_file(self, file: str) -> bool:
         """Opens and reads the file that is input on the Command Line"""
@@ -60,7 +65,16 @@ class UVSIM:
             
             """Store the results in memory"""
             self.memory[i] = int(line)
+            self.spareMemory[i] = int(line)
         return True
+    
+    def reset(self):
+        #Resets the program in the simulator to the state it was in when it was first loaded
+        self.accumulator = 0
+        self.instruction_count = 0
+        self.running = True
+        for i in range(MEMORYSIZE):
+            self.memory[i] = self.spareMemory[i]
 
     OPCODES: dict[int, Callable[["UVSIM", int], None]] = {
         10: "read",
@@ -103,14 +117,31 @@ class UVSIM:
     #### I/O Operations ####
     def read(self, address: int) -> None:
         """Reads a signed 4-digit number from user and stores it in memory"""
-        value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
-        while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
-            print("Invalid input. Please enter a signed 4-digit number like +1234 or -5678.")
+        # If in GUI mode, read from input field
+        if (getattr(self, 'gui', True)):
+            if (self.input != -99999):
+                value = self.input
+                if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
+                    self.memory[address] = int(value)
+                    self.running = True
+                else:
+                    self.running = False
+                self.input = -99999
+            else:
+                # If no input is provided, temporarily stop the program
+                self.running = False
+        # If not in GUI mode, read from console
+        else:
             value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
-        self.memory[address] = int(value)
+            while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
+                print("Invalid input. Please enter a signed 4-digit number like +1234 or -5678.")
+                value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
+            self.memory[address] = int(value)
 
     def write(self, address: int) -> None:
         """Prints the value stored at the given memory address"""
+        self.outputValue = f"{self.memory[address]:+04d}"
+        self.output = True  # Set output flag to True for GUI display
         print(f"{self.memory[address]}")
 
 

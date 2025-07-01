@@ -61,7 +61,7 @@ class UVSIMGUI:
         input_frame.pack(pady=5)
         self.input_entry = tk.Entry(input_frame, width=10)
         self.input_entry.pack(side=tk.LEFT, padx=(0,5))
-        tk.Button(input_frame, text="Submit Input", command=self.submit_input).pack(side=tk.LEFT)
+        self.input_button = tk.Button(input_frame, text="Submit Input", command=self.submit_input).pack(side=tk.LEFT)
 
 
         ## Creates the Run, Step, Pause, and Reset buttons and has their layout
@@ -105,7 +105,9 @@ class UVSIMGUI:
         self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
 
         # Update instruction number label
-        instr_num = getattr(self.sim, "instruction_counter", 0)
+        instr_num = getattr(self.sim, "instruction_count", 0)
+        if (instr_num > 0):
+            instr_num -= 1
         self.instruction_label.config(text=f"Instruction #: {instr_num:02d}")
 
     def load_program(self):
@@ -140,6 +142,7 @@ class UVSIMGUI:
       
     def run(self):
         """Run program continuously in a separate thread."""
+        self.sim.gui = True
         if getattr(self, "running", False):
             return  # Already running
         self.running = True
@@ -150,6 +153,11 @@ class UVSIMGUI:
                 if self.paused:
                     break
                 self.step()
+                if (self.sim.output):
+                    self.print_output(f"Output: {self.sim.outputValue}")
+                    self.sim.output = False
+                    self.sim.outputValue = ""
+                self.update_display()
                 time.sleep(0.5)  # Adjust execution speed here
             self.running = False  # Clean up when done
 
@@ -178,9 +186,18 @@ class UVSIMGUI:
         """Pause program execution."""
         self.paused = True
         self.running = False
+        self.sim.running = False  # Stop the simulator
+
+    # Resets the simulator to its initial state
     def reset(self):
-        ## Probably need to make a reset function in UVSIM to handle this
-        pass
+        self.sim.reset()
+        self.update_display()
+
+    # Submits the input from the input entry box to the simulator
     def submit_input(self):
-        ## Something probably needs to be changed about how we get input because it will still ask on the console instead of the GUI
-        pass
+        self.sim.input = self.input_entry.get()
+        if (self.sim.instruction_count >= 0):
+            self.sim.instruction_count -= 1  # Decrement instruction count to reprocess the read instruction
+        self.sim.running = True  # Set running to True to allow execution
+        self.run()
+        self.update_display()
