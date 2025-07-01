@@ -15,6 +15,7 @@ class UVSIMGUI:
         self.sim = sim
         self.labels = []
         self.mem_start = 0
+        self.waiting_input = False
         root.title("UVSIM")
 
         ## Create the memory title and the memory layout
@@ -134,8 +135,8 @@ class UVSIMGUI:
     #Prints messages to the Output location
     def print_output(self, message):
         self.output_box.config(state='normal')
-        self.output_box.delete('1.0', tk.END) #Makes it so only 1 line of text is in the output at any given time. (We can change if needed)
         self.output_box.insert(tk.END, message + "\n")
+        self.output_box.see(tk.END)
         self.output_box.config(state='disabled')
 
     ########## THESE ARE SOME OF THE FUNCTIONS THAT NEED TO BE MADE #####
@@ -171,6 +172,13 @@ class UVSIMGUI:
                 method = self.sim.OPCODES.get(code)
                 if method is None:
                     raise RuntimeError(f"Unknown opcode: {code}")
+                if code == 10:
+                    if not self.waiting_input:
+                        self.print_output("Waiting for input...")
+                        self.waiting_input = True
+                        self.sim.running = False
+                        
+                
                 handler = getattr(self.sim, method)
                 handler(op)
                 self.sim.instruction_count += 1
@@ -187,10 +195,15 @@ class UVSIMGUI:
         self.paused = True
         self.running = False
         self.sim.running = False  # Stop the simulator
+        self.print_output("Program has been paused")
 
     # Resets the simulator to its initial state
     def reset(self):
+        self.running = False
+        self.paused = False
+        self.waiting_input = False
         self.sim.reset()
+        self.print_output("Program has been reset.")
         self.update_display()
 
     # Submits the input from the input entry box to the simulator
@@ -198,6 +211,8 @@ class UVSIMGUI:
         self.sim.input = self.input_entry.get()
         if (self.sim.instruction_count >= 0):
             self.sim.instruction_count -= 1  # Decrement instruction count to reprocess the read instruction
+        
         self.sim.running = True  # Set running to True to allow execution
         self.run()
         self.update_display()
+        self.waiting_input = False
