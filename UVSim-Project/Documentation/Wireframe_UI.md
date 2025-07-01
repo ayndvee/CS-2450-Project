@@ -1,1 +1,1 @@
-![WireFrame UI](images/Wireframe_UI.PNG)
+![WireFrame UI](Images/Wireframe_UI.PNG)
