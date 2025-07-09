@@ -1,5 +1,6 @@
-from core.UVSim import UVSIM
-from gui.UVSim_Gui import UVSIMGUI
+from model.UVSim import UVSIM
+from view.UVSim_Gui import UVSIMGUI
+from controller.UVSim_Controller import UVSIM_Controller
 import tkinter as tk
 import sys
 
@@ -11,6 +12,8 @@ def run_commandline(file):
 def run_gui():
     root = tk.Tk()
     gui = UVSIMGUI(root, sim)
+    controller = UVSIM_Controller(sim, gui)
+    gui.bind_controller(controller)
     root.mainloop()
 
 if __name__ == "__main__":
