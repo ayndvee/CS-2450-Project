@@ -5,10 +5,25 @@
 ## IMPORTS
 import sys
 from typing import Callable
+from enum import IntEnum
 
 
 MEMORYSIZE = 100
 WORD_DIGITS = 4
+
+class Opcode(IntEnum):
+    READ = 10
+    WRITE = 11
+    LOAD = 20
+    STORE = 21
+    ADD = 30
+    SUBTRACT = 31
+    MULTIPLY = 32
+    DIVIDE = 33
+    BRANCH = 40
+    BRANCHNEG = 41
+    BRANCHZERO = 42
+    HALT = 43
 
 class UVSIM:
     def __init__(self) -> None:
@@ -76,19 +91,20 @@ class UVSIM:
         for i in range(MEMORYSIZE):
             self.memory[i] = self.spareMemory[i]
 
-    OPCODES: dict[int, Callable[["UVSIM", int], None]] = {
-        10: "read",
-        11: "write",
-        20: "load",
-        21: "store",
-        30: "add",
-        31: "subtract",
-        32: "multiply",
-        33: "divide",
-        40: "branch",
-        41: "branchNeg",
-        42: "branchZero",
-        43: "halt"
+    ## UPDATED THE OPCODE format to the ENUM format like requested
+    OPCODES: dict[int, str] = {
+        Opcode.READ: "read",
+        Opcode.WRITE: "write",
+        Opcode.LOAD: "load",
+        Opcode.STORE: "store",
+        Opcode.ADD: "add",
+        Opcode.SUBTRACT: "subtract",
+        Opcode.MULTIPLY: "multiply",
+        Opcode.DIVIDE: "divide",
+        Opcode.BRANCH: "branch",
+        Opcode.BRANCHNEG: "branchNeg",
+        Opcode.BRANCHZERO: "branchZero",
+        Opcode.HALT: "halt"
     }
 
     def execute(self) -> None:
