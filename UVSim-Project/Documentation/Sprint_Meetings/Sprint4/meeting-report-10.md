@@ -1,6 +1,6 @@
 # Meeting Report
 Date: July 8th, 2025
-Attendees: Anthony (Note taker), Andie (Scrum Master), Brandon (Product Manager)
+Attendees: Anthony (Meeting Recorder), Andie (Scrum Master), Brandon (Product Manager)
 
 # Agenda
 - go over the feedback from last milestone
