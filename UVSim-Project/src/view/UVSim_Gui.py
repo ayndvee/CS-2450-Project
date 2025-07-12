@@ -18,7 +18,11 @@ class UVSIMGUI:
         self.controller = None
         root.title("UVSIM")
 
+        
         ## Create the memory title and the memory layout
+        header_frame = tk.Frame(root)
+        header_frame.pack(fill=tk.X, pady=(10, 0), padx=10)
+        tk.Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
         tk.Label(root, text="Memory").pack(pady=(10, 0))
         memory_frame = tk.LabelFrame(root, padx=10, pady=10, borderwidth=2, relief="groove")
         memory_frame.pack(padx=10, pady=10)
@@ -131,7 +135,8 @@ class UVSIMGUI:
         self.root.configure(bg =primary_color)
 
         for widget in self.root.winfo_children():
-        # Frames
+            if isinstance(widget, tk.LabelFrame) and not widget.cget("text"):
+                widget.config(highlightbackground= "black", highlightthickness= 2, bd = 0, relief= 'flat')
             if isinstance(widget, tk.Frame) or isinstance(widget, tk.LabelFrame):
                 widget.configure(bg=primary_color)
                 for child in widget.winfo_children():
@@ -140,8 +145,10 @@ class UVSIMGUI:
                 self._apply_theme_to_widget(widget, primary_color, off_color)
 
     def _apply_theme_to_widget(self, widget, primary_color, off_color):
-        if isinstance(widget, (tk.Label, tk.Button)):
+        if isinstance(widget, tk.Label):
             widget.configure(bg=primary_color, fg="black", activebackground=off_color)
+        elif isinstance(widget, tk.Button):
+            widget.configure(bg = off_color, fg= 'black', activebackground= primary_color)
         elif isinstance(widget, tk.Entry):
             widget.configure(bg=off_color, fg="black", insertbackground="black")
         elif isinstance(widget, tk.Text):

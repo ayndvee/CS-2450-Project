@@ -1,10 +1,12 @@
 import time
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, colorchooser
 import threading
 import json
+import os
 
 DEFAULT_PRIMARY = "#4C721D"
 DEFAULT_OFF = "#FFFFFF"
+CONFIG_FILE = CONFIG_FILE = os.path.join(os.path.dirname(__file__), '..', 'config.json')
 
 class UVSIM_Controller:
     def __init__(self, sim, view):
@@ -136,22 +138,16 @@ class UVSIM_Controller:
         LOADS the theme from the config file to apply it.
         """
         try:
-            with open('../config.json', 'r') as file:
+            with open(CONFIG_FILE, 'r') as file:
                 return json.load(file)
         except Exception:
             return None
-        
+    def change_theme(self):
+        ## I would recommend using colorpicker or something similar to it
+        return   
         
     def save_theme(self, primary_color, off_color):
         config = {
             "primary_color": primary_color,
             "off_color": off_color
         }
-        try:
-            with open('../config.json', 'w') as f:
-                json.dump(config, f, indent=4)
-            self.theme = config
-            self.view.set_theme(primary_color, off_color)
-            self.view.print_output("Theme saved and applied")
-        except Exception as e:
-            self.view.print_output(f"Failed to save theme: {e}")

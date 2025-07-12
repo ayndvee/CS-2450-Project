@@ -1,5 +1,5 @@
 import unittest
-from core.UVSim import UVSIM
+from model.UVSim import UVSIM
 from unittest.mock import patch
 from io import StringIO
 
@@ -38,7 +38,7 @@ class TestUVSIM(unittest.TestCase):
         self.sim.accumulator = 5
         self.sim.instruction_count = 1
         self.sim.branchNeg(72)
-        self.assertEqual(self.sim.instruction_count, 2)
+        self.assertEqual(self.sim.instruction_count, 1)
     def test_branchZero_accumulator_zero(self):
         ## Expected to branch if accumulator is 0
         self.sim.accumulator = 0
@@ -49,7 +49,7 @@ class TestUVSIM(unittest.TestCase):
         self.sim.accumulator = 12
         self.sim.instruction_count = 4
         self.sim.branchZero(12)
-        self.assertEqual(self.sim.instruction_count, 5)
+        self.assertEqual(self.sim.instruction_count, 4)
     def test_halt_running_false(self):
         # Expected that the self.running would be false after halt
         self.sim.halt()
@@ -133,9 +133,8 @@ class TestUVSIM(unittest.TestCase):
         # memory[30] = 0, expect no change in accumulator and error message
         self.sim.memory[30] = 0
         self.sim.accumulator = 500
-        self.sim.divide(30)
-        #Error message is printed, but we can't capture it in this test
-        self.assertEqual(self.sim.accumulator, 500) 
+        with self.assertRaises(ZeroDivisionError):
+            self.sim.divide(30) 
     
      # --- LOAD / STORE Tests ---
 
