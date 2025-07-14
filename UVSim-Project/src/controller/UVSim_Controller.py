@@ -1,4 +1,5 @@
 import time
+import tkinter as tk
 from tkinter import filedialog, messagebox, colorchooser
 import threading
 import json
