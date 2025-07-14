@@ -13,6 +13,9 @@ class UVSIMGUI:
     def __init__(self, root, sim):
         self.root = root
         self.sim = sim
+        self.cpu = sim.cpu
+        self.memory = sim.memory
+        self.io = sim.io
         self.labels = []
         self.mem_start = 0
         self.controller = None
@@ -22,6 +25,7 @@ class UVSIMGUI:
         ## Create the memory title and the memory layout
         header_frame = tk.Frame(root)
         header_frame.pack(fill=tk.X, pady=(10, 0), padx=10)
+        tk.Button(header_frame, text= "Reset Theme", command= lambda: self.controller.reset_theme()).pack(side = tk.LEFT)
         tk.Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
         tk.Label(root, text="Memory").pack(pady=(10, 0))
         memory_frame = tk.LabelFrame(root, padx=10, pady=10, borderwidth=2, relief="groove")
@@ -85,6 +89,8 @@ class UVSIMGUI:
         self.output_box= tk.Text(root, height=8, width=50, state='disabled')
         self.output_box.pack()
 
+        ## Creates the save file button
+        tk.Button(root, text="Save File", command= lambda: self.controller.save_file()).pack(pady=5)
         self.update_display()
 
     def bind_controller(self, controller):
@@ -99,7 +105,7 @@ class UVSIMGUI:
             for j, (addr_label, val_label) in enumerate(row_labels):
                 mem_index = self.mem_start + i*5 + j
                 try:
-                    value = self.sim.memory.get(mem_index)
+                    value = self.memory.get(mem_index)
                     # Make it a signed 4 digit value
                     value_str = f"{value:+05d}"
                 except IndexError:
@@ -109,11 +115,11 @@ class UVSIMGUI:
                 val_label.config(text=f"Value: {value_str}")
     def update_status(self):
         # Update accumulator label
-        acc_value = getattr(self.sim, "accumulator", 0)
+        acc_value = getattr(self.cpu, "accumulator", 0)
         self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
 
         # Update instruction number label
-        instr_num = getattr(self.sim, "instruction_count", 0)
+        instr_num = getattr(self.cpu, "instruction_count", 0)
         if (instr_num > 0):
             instr_num -= 1
         self.instruction_label.config(text=f"Instruction #: {instr_num:02d}")
@@ -145,8 +151,12 @@ class UVSIMGUI:
                 self._apply_theme_to_widget(widget, primary_color, off_color)
 
     def _apply_theme_to_widget(self, widget, primary_color, off_color):
+
+        """
+        Applies the theme colors to specific widgets based on its type. 
+        """
         if isinstance(widget, tk.Label):
-            widget.configure(bg=primary_color, fg="black", activebackground=off_color)
+            widget.configure(bg=primary_color, fg="black", activebackground= off_color)
         elif isinstance(widget, tk.Button):
             widget.configure(bg = off_color, fg= 'black', activebackground= primary_color)
         elif isinstance(widget, tk.Entry):

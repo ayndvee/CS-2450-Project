@@ -23,18 +23,18 @@ class CPU:
         self.running = True
 
         self.OPCODES = {
-            Opcode.READ: self.read,
-            Opcode.WRITE: self.write,
-            Opcode.LOAD: self.load,
-            Opcode.STORE: self.store,
-            Opcode.ADD: self.add,
-            Opcode.SUBTRACT: self.subtract,
-            Opcode.MULTIPLY: self.multiply,
-            Opcode.DIVIDE: self.divide,
-            Opcode.BRANCH: self.branch,
-            Opcode.BRANCHNEG: self.branchNeg,
-            Opcode.BRANCHZERO: self.branchZero,
-            Opcode.HALT: self.halt
+            Opcode.READ: "read",
+            Opcode.WRITE: "write",
+            Opcode.LOAD: 'load',
+            Opcode.STORE: 'store',
+            Opcode.ADD: 'add',
+            Opcode.SUBTRACT: "subtract",
+            Opcode.MULTIPLY: "multiply",
+            Opcode.DIVIDE: "divide",
+            Opcode.BRANCH: "branch",
+            Opcode.BRANCHNEG: "branchNeg",
+            Opcode.BRANCHZERO: "branchZero",
+            Opcode.HALT: "halt"
         }
 
     def execute(self):
@@ -47,7 +47,8 @@ class CPU:
             method = self.OPCODES.get(code)
             if method is None:
                 raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
-            method(op)
+            handler = getattr(self, method)
+            handler(op)   
             self.instruction_count += 1
 
     # I/O
@@ -68,12 +69,27 @@ class CPU:
     def multiply(self, addr): self.accumulator *= self.memory.get(addr)
 
     # Control
-    def branch(self, addr): self.instruction_count = addr
-    def branchNeg(self, addr): 
-        if self.accumulator < 0: self.branch(addr)
-    def branchZero(self, addr): 
-        if self.accumulator == 0: self.branch(addr)
-    def halt(self, _=None): self.running = False
+    def branch(self, operand: int) -> None:
+        """Check to make sure operand is in the bounds of memory"""
+        if 0 <= operand < len(self.memory.memory):
+            self.instruction_count = operand
+        #If it isn't stop the program 
+        else:
+            print("Invalid operand: Out of Memory Range")
+            self.halt()
+    def branchNeg(self, operand: int) -> None:
+        """If the accumulator is negative branch to the new location in memory"""
+        if self.accumulator < 0:
+            self.branch(operand)
+        
+    def branchZero(self, operand: int) -> None:
+        """If the accumulator is 0, just to the new location in memory"""
+        if self.accumulator == 0:
+            self.branch(operand)
+        
+    def halt(self, _=None) -> None:
+        """Set running to false because we are stopping the program."""
+        self.running = False
 
     def reset(self):
         self.accumulator = 0
