@@ -10,6 +10,7 @@ def run_commandline(file):
     sim.execute()
 
 def run_gui():
+    sim = UVSIM()
     root = tk.Tk()
     gui = UVSIMGUI(root, sim)
     controller = UVSIM_Controller(sim, gui)
@@ -17,7 +18,6 @@ def run_gui():
     root.mainloop()
 
 if __name__ == "__main__":
-    sim = UVSIM()
     if len(sys.argv) == 2:
         run_commandline(sys.argv[1])
     else:

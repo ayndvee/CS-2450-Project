@@ -16,31 +16,30 @@ class UVSIM_Controller:
         self.paused = False
         self.waiting_input = False
         self.view.bind_controller(self)
+        self.root = self.view.root  
 
         self.apply_theme()
 
     def run(self):
-        """Run program continuously in a separate thread."""
+        """Run program continuously on the main thread using Tk.after."""
         self.sim.gui = True
-        if getattr(self, "running", False):
+        if self.running:
             return  # Already running
         self.running = True
         self.paused = False
+        self._execute_step()
 
-        def execute_loop():
-            while self.running and self.sim.running:
-                if self.paused:
-                    break
-                self.step()
-                if (self.sim.output):
-                    self.view.print_output(f"Output: {self.sim.outputValue}")
-                    self.sim.output = False
-                    self.sim.outputValue = ""
-                self.view.update_display()
-                time.sleep(0.5)  # Adjust execution speed here
+    def _execute_step(self):
+        if self.running and self.sim.running and not self.paused:
+            self.step()
+            if self.sim.output:
+                self.view.print_output(f"Output: {self.sim.outputValue}")
+                self.sim.output = False
+                self.sim.outputValue = ""
+            self.view.update_display()
+            self.root.after(500, self._execute_step)  # Schedule next step in 500ms
+        else:
             self.running = False  # Clean up when done
-
-        threading.Thread(target=execute_loop, daemon=True).start()
 
     def step(self):
         """Execute a single instruction and update GUI."""
