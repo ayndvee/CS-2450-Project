@@ -33,6 +33,10 @@ class Memory:
             self.memory[i] = int(line)
             self.spareMemory[i] = int(line)
         return True
+    
+    def getLines(self) -> list[str]:
+        """Returns the memory as a list of strings"""
+        return [f"{value:+05d}" for value in self.memory]
 
     def reset(self):
         """Reset memory to original spare copy"""

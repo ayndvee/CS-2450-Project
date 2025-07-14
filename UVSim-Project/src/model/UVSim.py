@@ -15,6 +15,14 @@ class UVSIM:
         with open(file, 'r') as filename:
             lines = filename.readlines()
         return self.memory.load_program(lines)
+    
+    def save_file(self, file: str) -> bool:
+        """Save the current memory state to a file"""
+        with open(file, 'w') as filename:
+            lines = self.memory.getLines()
+            for i in range(len(lines)):
+                filename.write(f"{lines[i]}\n")
+        return True
 
     def reset(self):
         """Reset the machine to initial state"""

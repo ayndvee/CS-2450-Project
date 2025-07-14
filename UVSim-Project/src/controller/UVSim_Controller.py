@@ -192,4 +192,15 @@ class UVSIM_Controller:
         self.save_theme(DEFAULT_PRIMARY, DEFAULT_OFF)
 
     def save_file(self):
-        pass
+        """
+        Saves the current memory state to a file.
+        """
+        ##This opens up the file explorer for the user to select a file
+        file_path = filedialog.asksaveasfile(defaultextension='.txt', filetypes=[("Text File", "*.txt")])
+        if file_path:
+            if self.sim.save_file(file_path.name):
+                self.view.print_output("File saved successfully")
+                self.view.update_display()
+
+            else:
+                self.view.print_output("File couldn't be saved")
