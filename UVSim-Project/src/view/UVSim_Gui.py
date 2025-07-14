@@ -99,7 +99,7 @@ class UVSIMGUI:
             for j, (addr_label, val_label) in enumerate(row_labels):
                 mem_index = self.mem_start + i*5 + j
                 try:
-                    value = self.sim.memory[mem_index]
+                    value = self.sim.memory.get(mem_index)
                     # Make it a signed 4 digit value
                     value_str = f"{value:+05d}"
                 except IndexError:

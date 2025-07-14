@@ -1,215 +1,26 @@
-#Names: Anthony, Brandon, Andie
-#Project: Milestone 2 UVSIM
+from .Memory import Memory
+from .IOHandler import IOHandler
+from .CPU import CPU
 
-
-## IMPORTS
-import sys
-from typing import Callable
-from enum import IntEnum
-
-
-MEMORYSIZE = 100
-WORD_DIGITS = 4
-
-class Opcode(IntEnum):
-    READ = 10
-    WRITE = 11
-    LOAD = 20
-    STORE = 21
-    ADD = 30
-    SUBTRACT = 31
-    MULTIPLY = 32
-    DIVIDE = 33
-    BRANCH = 40
-    BRANCHNEG = 41
-    BRANCHZERO = 42
-    HALT = 43
 
 class UVSIM:
-    def __init__(self) -> None:
-        """Set up memory and accumulator"""
-        self.memory = [0] * MEMORYSIZE
-        self.spareMemory = [0] * MEMORYSIZE
-        self.accumulator = 0
-        self.instruction_count = 0
-        self.running = True
-        self.gui = False  # Flag to indicate if running in GUI mode
-        self.input = -99999  # Holds input from the user in GUI mode
-        self.output = False  # Determines if the program is outputting to the gui
-        self.outputValue = ""  # Holds output value for GUI display
+    def __init__(self, gui=False):
+        """Set up the components: memory, IO handler, CPU"""
+        self.memory = Memory()
+        self.io = IOHandler(gui)
+        self.cpu = CPU(self.memory, self.io)
 
     def read_file(self, file: str) -> bool:
-        """Opens and reads the file that is input on the Command Line"""
-
-        """Opens the file and reads it line by line"""
+        """Open and read the file into memory"""
         with open(file, 'r') as filename:
             lines = filename.readlines()
+        return self.memory.load_program(lines)
 
-        """Enumerate adds a counter to the lines so we can count how many we have, so we don't go over the memory limit"""
-        for i, line in enumerate(lines):
-            """If we go over the memory limit we will just end the program"""
-            if i >= MEMORYSIZE:
-                print("Error too many lines for memory capacity")
-                return False
-            """Next we will just get rid of the white space on the lines so we are only dealing with text"""
-            line = line.strip()
-
-            """We have reached the end of the file so just stop and don't try to include it"""
-            if line == '-99999':
-                break
-
-            """If there is an empty line (end the program for now)"""
-            if not line:
-                print(f"Error on line {i}: there is no line")
-                return False
-            
-            """If we are reading a line and there is not signed number (end it for now)"""
-            if not line[0] in '+-':
-                print(f"Error on line {i}: must be signed with + or -")
-                return False
-            
-            """If we are reading after the +- sign and it isn't a number (end the program for now)"""
-            if not line[1:].isdigit():
-                print(f"Error on line {i}: must be numbers after the sign")
-                return False
-            """Make sure that we are only reading lines that have only 4 numbers after the sign"""
-            if len(line[1:]) != WORD_DIGITS:
-                print(f"Error on line {i}: must be exactly 4 numbers after the sign")
-                return False
-
-            
-            """Store the results in memory"""
-            self.memory[i] = int(line)
-            self.spareMemory[i] = int(line)
-        return True
-    
     def reset(self):
-        #Resets the program in the simulator to the state it was in when it was first loaded
-        self.accumulator = 0
-        self.instruction_count = 0
-        self.running = True
-        for i in range(MEMORYSIZE):
-            self.memory[i] = self.spareMemory[i]
+        """Reset the machine to initial state"""
+        self.memory.reset()
+        self.cpu.reset()
 
-    ## UPDATED THE OPCODE format to the ENUM format like requested
-    OPCODES: dict[int, str] = {
-        Opcode.READ: "read",
-        Opcode.WRITE: "write",
-        Opcode.LOAD: "load",
-        Opcode.STORE: "store",
-        Opcode.ADD: "add",
-        Opcode.SUBTRACT: "subtract",
-        Opcode.MULTIPLY: "multiply",
-        Opcode.DIVIDE: "divide",
-        Opcode.BRANCH: "branch",
-        Opcode.BRANCHNEG: "branchNeg",
-        Opcode.BRANCHZERO: "branchZero",
-        Opcode.HALT: "halt"
-    }
-
-    def execute(self) -> None:
-        #Loops through the memory and performs the action for each opcode
-
-        """
-        My thoughts would be to have something like and if statement to find the correct
-        opcode and then just call the operation on it as its own function.
-        """
-        while self.running:
-            if self.instruction_count >= MEMORYSIZE:
-                print("Error: Instruction pointer out of memory bounds.")
-                self.halt()
-                break
-            code, op = divmod(self.memory[self.instruction_count], 100)
-    
-            method = self.OPCODES.get(code)
-            if method is None:
-                raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
-            handler = getattr(self, method)
-            handler(op)
-
-            self.instruction_count += 1
-
-
-    #### I/O Operations ####
-    def read(self, address: int) -> None:
-        """Reads a signed 4-digit number from user and stores it in memory"""
-        # If in GUI mode, read from input field
-        if (getattr(self, 'gui', True)):
-            if (self.input != -99999):
-                value = self.input
-                if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
-                    self.memory[address] = int(value)
-                    self.running = True
-                else:
-                    self.running = False
-                self.input = -99999
-            else:
-                # If no input is provided, temporarily stop the program
-                self.running = False
-        # If not in GUI mode, read from console
-        else:
-            value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
-            while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
-                print("Invalid input. Please enter a signed 4-digit number like +1234 or -5678.")
-                value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
-            self.memory[address] = int(value)
-
-    def write(self, address: int) -> None:
-        """Prints the value stored at the given memory address"""
-        self.outputValue = f"{self.memory[address]:+04d}"
-        self.output = True  # Set output flag to True for GUI display
-        print(f"{self.memory[address]}")
-
-
-    #### LOAD/STORE Operations ####
-    def load(self, address: int) -> None:
-        """Loads the value from memory into the accumulator"""
-        self.accumulator = self.memory[address]
-
-    def store(self, address: int) -> None:
-        """Stores the value from the accumulator into memory"""
-        self.memory[address] = self.accumulator
-
-    #### Arithmetic Operations ####
-        """Add the value in memory to the accumulator"""
-    def add(self, operand: int) -> None:
-        self.accumulator += self.memory[operand]
-
-    #Subtract the value in memory from the accumulator
-    def subtract(self, operand: int) -> None:
-        self.accumulator -= self.memory[operand]
-
-    #Divide the accumulator by the value in memory
-    def divide(self, operand: int) -> None:
-        #Check for division by zero
-        if self.memory[operand] == 0:
-            raise ZeroDivisionError("Error: Division by zero")
-        self.accumulator //= self.memory[operand]
-
-    #Multiply the accumulator by the value in memory
-    def multiply(self, operand: int) -> None:
-        self.accumulator *= self.memory[operand]
-        
-    #### Control Operations ####
-    def branch(self, operand: int) -> None:
-        """Check to make sure operand is in the bounds of memory"""
-        if 0 <= operand < len(self.memory):
-            self.instruction_count = operand
-        #If it isn't aren't stop the program 
-        else:
-            print("Invalid operand: Out of Memory Range")
-            self.halt()
-    def branchNeg(self, operand: int) -> None:
-        """If the accumulator is negative branch to the new location in memory"""
-        if self.accumulator < 0:
-            self.branch(operand)
-        
-    def branchZero(self, operand: int) -> None:
-        """If the accumulator is 0, just to the new location in memory"""
-        if self.accumulator == 0:
-            self.branch(operand)
-        
-    def halt(self, _=None) -> None:
-        """Set running to false because we are stopping the program."""
-        self.running = False
-
+    def execute(self):
+        """Start executing instructions"""
+        self.cpu.execute()
