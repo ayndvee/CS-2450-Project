@@ -68,7 +68,9 @@ class CPU:
         if self.memory.get(addr) == 0:
             raise ZeroDivisionError("Error: Division by zero")
         self.accumulator //= self.memory.get(addr)
-    def multiply(self, addr): self.accumulator *= self.memory.get(addr)
+    def multiply(self, addr):
+        self.accumulator *= self.memory.get(addr)
+        self.accumulator %= 10000
 
     # Control
     def branch(self, operand: int) -> None:
