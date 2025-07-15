@@ -273,7 +273,9 @@ This hanldes the user interaction for both the GUI and console. It handles the r
 
 ## Purpose
 The UVSIMGUI class helps provide a graphical user interface for the UVSIM simulator by using Tkinter. It allows the user to load BasicML programs, view memory, input values, and step through the process of the simulation. The class only handles user interaction and display of the logic.
+
 ## Features
+
 - root - The main Tkinter window for display
 - sim - An instance of UVSIM class
 - labels = a 2D list of tuples to hold memory addresses and value labels
@@ -284,6 +286,8 @@ The UVSIMGUI class helps provide a graphical user interface for the UVSIM simula
 - intruction_label = Label that shows the current instruction count value
 - output_box = Text box that will be used to display error messages and output from the program.
 # Functions
+
+
 # __init__(self, root, sim)
 - Purpose
 	- To create and set up the GUI and its features and connect buttons to their methods.
