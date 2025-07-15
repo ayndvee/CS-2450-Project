@@ -115,6 +115,7 @@ It also manages the accumulator, instruction counter and execution flow.
 	-operand -memory index
 - Post Condition:
 	- Accumulator is updated
+ 	- If the value reached would exceed 4 digits, the 4 least significant digits are kept
 # subtract(self, operand)
 - Purpose:
 	- Subtracts value in memory to the accumulator
@@ -122,6 +123,7 @@ It also manages the accumulator, instruction counter and execution flow.
 	-operand -memory index
 - Post Condition:
 	- Accumulator is updated
+ 	- If the value reached would exceed 4 digits, the 4 least significant digits are kept
 # multiply(self, operand)
 - Purpose:
 	- Multiplies value in memory to the accumulator
@@ -129,6 +131,7 @@ It also manages the accumulator, instruction counter and execution flow.
 	-operand -memory index
 - Post Condition:
 	- Accumulator is updated
+ 	- If the value reached would exceed 4 digits, the 4 least significant digits are kept
 # divide(self, operand)
 - Purpose:
 	- Divides value in memory to the accumulator
