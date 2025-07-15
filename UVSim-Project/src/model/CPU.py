@@ -1,4 +1,4 @@
-from Util import Globals\
+from globals.Util import Globals
 
 from enum import IntEnum
 

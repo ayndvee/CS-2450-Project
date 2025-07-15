@@ -1,4 +1,4 @@
-from Util import Globals
+from globals.Util import Globals
 
 class Memory:
     def __init__(self) -> None:
@@ -15,7 +15,7 @@ class Memory:
 
             line = line.strip()
 
-            if line == Globals.STOP:
+            if line == str(Globals.STOP):
                 break
             if not line:
                 print(f"Error on line {i}: there is no line")

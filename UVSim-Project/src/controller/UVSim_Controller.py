@@ -4,9 +4,8 @@ from tkinter import filedialog, messagebox, colorchooser
 import threading
 import json
 import os
+from globals.Util import Globals
 
-DEFAULT_PRIMARY = "#4C721D"
-DEFAULT_OFF = "#FFFFFF"
 CONFIG_FILE = CONFIG_FILE = os.path.join(os.path.dirname(__file__), '..', 'config.json')
 
 class UVSIM_Controller:
@@ -19,7 +18,7 @@ class UVSIM_Controller:
         self.running = False
         self.paused = False
         self.waiting_input = False
-        self.recieved_input = False
+        self.received_input = False
         self.view.bind_controller(self)
         self.root = self.view.root  
 
@@ -42,7 +41,7 @@ class UVSIM_Controller:
                 self.io.output = False
                 self.io.outputValue = ""
             self.view.update_display()
-            self.root.after(500, self._execute_step)  # Schedule next step in 500ms
+            self.root.after(Globals.INTERVAL, self._execute_step)  # Schedule next step in 500ms
         else:
             self.running = False  # Clean up when done
 
@@ -59,13 +58,13 @@ class UVSIM_Controller:
                 if method is None:
                     raise RuntimeError(f"Unknown opcode: {code}")
                 if code == 10:
-                    if not self.waiting_input and not self.recieved_input:
+                    if not self.waiting_input and not self.received_input:
                         self.view.print_output("Waiting for input...")
                         self.waiting_input = True
                         self.cpu.running = False
                         self.view.update_display()
                         
-                    self.recieved_input = False
+                    self.received_input = False
                         
                 handler = getattr(self.cpu, method)
                 handler(op)
@@ -96,14 +95,18 @@ class UVSIM_Controller:
 
     def load_program(self):
         ##This opens up the file explorer for the user to select a file
-        file_path = filedialog.askopenfilename(filetypes=[("Text file", "*.txt")])
-        if file_path:
-            if self.sim.read_file(file_path):
-                self.view.print_output("File read successfully")
-                self.view.update_display()
+        try:
+            file_path = filedialog.askopenfilename(filetypes=[("Text file", "*.txt")])
+            if file_path:
+                if self.sim.read_file(file_path):
+                    self.view.print_output("File read successfully")
+                    self.view.update_display()
 
-            else:
-                self.view.print_output("File couldn't be read")
+                else:
+                    raise FileNotFoundError
+
+        except FileNotFoundError:
+            self.view.print_output("File not found")
 
     #Gets the 10 previous Memory locations
     def prev_memory(self):
@@ -117,14 +120,18 @@ class UVSIM_Controller:
 
     # Submits the input from the input entry box to the simulator
     def submit_input(self):
-        self.io.input = self.view.input_entry.get()
-        if (self.cpu.instruction_count >= 0):
-            self.cpu.instruction_count -= 1  # Decrement instruction count to reprocess the read instruction
-        self.waiting_input = False
-        self.cpu.running = True  # Set running to True to allow execution
-        self.recieved_input = True
-        self.run()
-        self.view.update_display()        
+        value = self.view.input_entry.get()
+        if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5) or (value[0:].isdigit() and len(value) == 4):
+            self.io.input = value
+            if (self.cpu.instruction_count >= 0):
+                self.cpu.instruction_count -= 1  # Decrement instruction count to reprocess the read instruction
+            self.waiting_input = False
+            self.cpu.running = True  # Set running to True to allow execution
+            self.received_input = True
+            self.run()
+            self.view.update_display()
+        else:
+            self.view.print_output("Invalid input format, input should be a signed 4-digit integer")
 
 
     ## THEME RELATED CODE
@@ -136,10 +143,10 @@ class UVSIM_Controller:
         """
         theme = self.load_theme()
         if theme:
-            primary_color = theme.get("primary_color", DEFAULT_PRIMARY)
-            off_color = theme.get("off_color", DEFAULT_OFF)
+            primary_color = theme.get("primary_color", Globals.DEFAULT_PRIMARY)
+            off_color = theme.get("off_color", Globals.DEFAULT_OFF)
         else:
-            primary_color, off_color = DEFAULT_PRIMARY, DEFAULT_OFF
+            primary_color, off_color = Globals.DEFAULT_PRIMARY, Globals.DEFAULT_OFF
         
         self.view.set_theme(primary_color, off_color)
 
@@ -189,18 +196,21 @@ class UVSIM_Controller:
         """
         Resets the theme to default colors and updates config
         """
-        self.save_theme(DEFAULT_PRIMARY, DEFAULT_OFF)
+        self.save_theme(Globals.DEFAULT_PRIMARY, Globals.DEFAULT_OFF)
 
     def save_file(self):
         """
         Saves the current memory state to a file.
         """
         ##This opens up the file explorer for the user to select a file
-        file_path = filedialog.asksaveasfile(defaultextension='.txt', filetypes=[("Text File", "*.txt")])
-        if file_path:
-            if self.sim.save_file(file_path.name):
-                self.view.print_output("File saved successfully")
-                self.view.update_display()
+        try:
+            file_path = filedialog.asksaveasfile(defaultextension='.txt', filetypes=[("Text File", "*.txt")])
+            if file_path:
+                if self.sim.save_file(file_path.name):
+                    self.view.print_output("File saved successfully")
+                    self.view.update_display()
 
-            else:
-                self.view.print_output("File couldn't be saved")
+                else:
+                    raise FileNotFoundError
+        except Exception as e:
+            self.view.print_output(f"Failed to save file: {e}")

@@ -1,4 +1,4 @@
-from Util import Globals
+from globals.Util import Globals
 
 class IOHandler:
     def __init__(self, gui_mode: bool = False):
@@ -11,7 +11,7 @@ class IOHandler:
         if self.gui:
             if self.input != Globals.STOP:
                 value = self.input
-                if value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5:
+                if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5) or (value[0:].isdigit() and len(value) == 4):
                     memory.set(address, int(value))
                     self.input = Globals.STOP
                     return True
