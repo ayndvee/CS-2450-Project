@@ -1,12 +1,8 @@
-import time
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, colorchooser
-import threading
 import json
-import os
 from globals.Util import Globals
-
-CONFIG_FILE = CONFIG_FILE = os.path.join(os.path.dirname(__file__), '..', 'config.json')
 
 class UVSIM_Controller:
     def __init__(self, sim, view):
@@ -95,18 +91,71 @@ class UVSIM_Controller:
 
     def load_program(self):
         ##This opens up the file explorer for the user to select a file
-        try:
-            file_path = filedialog.askopenfilename(filetypes=[("Text file", "*.txt")])
-            if file_path:
-                if self.sim.read_file(file_path):
-                    self.view.print_output("File read successfully")
+        file_path = filedialog.askopenfilename(filetypes=[("Text file", "*.txt")])
+        if file_path:
+            try:
+                with open(file_path, 'r') as f:
+                    lines = f.readlines()
+                if self.sim.memory.load_program(lines):
+                    self.view.print_output("Successfully loaded file")
                     self.view.update_display()
-
+                    editor_content = "".join(lines)
+                    if hasattr(self.view, "program_editor"):
+                        self.view.program_editor.config(state='normal')
+                        self.view.program_editor.delete("1.0", "end")
+                        self.view.program_editor.insert("1.0", editor_content)
+                        self.view.program_editor.config(state='normal')
+                    self.view.update_display()
+                        
                 else:
-                    raise FileNotFoundError
+                    self.view.print_output("File couldn't be read")
+            except Exception as e:
+                self.view.print_output(f"Error loading file: {e}")
 
-        except FileNotFoundError:
-            self.view.print_output("File not found")
+
+    def load_from_editor(self):
+        raw = self.view.program_editor.get("1.0", tk.END).strip().splitlines()
+        if len(raw) > Globals.MEMORYSIZE:
+            self.view.print_output("Error: Editor has more than 100 instructions.")
+            return False
+
+        for i, line in enumerate(raw):
+            line = line.strip()
+            if not line or line == Globals.STOP:
+                break
+            if not line[0] in '+-' or not line[1:].isdigit() or len(line[1:]) != 4:
+                self.view.print_output(f"Error on line {i}: Invalid instruction '{line}'")
+                return False
+            self.memory.memory[i] = int(line)
+            self.memory.spareMemory[i] = int(line)
+        self.view.print_output("Editor contents loaded into memory.")
+        self.view.update_display()
+        return True
+    
+    def cut_text(self, event=None):
+        self.copy_text()
+        self.program_editor.delete("sel.first", "sel.last")
+        return "break"
+
+    def copy_text(self, event=None):
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(self.program_editor.get("sel.first", "sel.last"))
+        except tk.TclError:
+            pass
+        return "break"
+
+    def paste_text(self, event=None):
+        try:
+            pasted = self.root.clipboard_get()
+            current_text = self.program_editor.get("1.0", tk.END).strip().splitlines()
+            if len(current_text) + pasted.count("\n") > 100:
+                self.print_output("Paste would exceed 100 lines. Cancelled.")
+                return "break"
+            self.program_editor.insert(tk.INSERT, pasted)
+        except tk.TclError:
+            pass
+        return "break"
 
     #Gets the 10 previous Memory locations
     def prev_memory(self):
@@ -155,7 +204,7 @@ class UVSIM_Controller:
         LOADS the theme from the config file to apply it.
         """
         try:
-            with open(CONFIG_FILE, 'r') as file:
+            with open(Globals.CONFIG_FILE, 'r') as file:
                 return json.load(file)
         except Exception:
             return None
@@ -184,7 +233,7 @@ class UVSIM_Controller:
             "off_color": off_color
         }
         try:
-            with open(CONFIG_FILE, 'w') as f:
+            with open(Globals.CONFIG_FILE, 'w') as f:
                 json.dump(config, f, indent=4)
             self.theme = config
             self.view.set_theme(primary_color, off_color)

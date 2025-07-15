@@ -27,6 +27,13 @@ class UVSIMGUI:
         header_frame.pack(fill=tk.X, pady=(10, 0), padx=10)
         tk.Button(header_frame, text= "Reset Theme", command= lambda: self.controller.reset_theme()).pack(side = tk.LEFT)
         tk.Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
+
+        self.program_editor = tk.Text(self.root, height=10, width=50, wrap=tk.NONE)
+        tk.Label(root, text= "Memory Edit").pack(pady=(10,0))
+        self.program_editor.pack()
+        tk.Button(self.root, text="Load to Memory", command= lambda: self.controller.load_from_editor()).pack(pady=10)
+
+
         tk.Label(root, text="Memory").pack(pady=(10, 0))
         memory_frame = tk.LabelFrame(root, padx=10, pady=10, borderwidth=2, relief="groove")
         memory_frame.pack(padx=10, pady=10)
@@ -95,6 +102,9 @@ class UVSIMGUI:
 
     def bind_controller(self, controller):
         self.controller = controller
+        self.program_editor.bind("<Control-c>", self.controller.copy_text)
+        self.program_editor.bind("<Control-x>", self.controller.cut_text)
+        self.program_editor.bind("<Control-v>", self.controller.paste_text)
 
     def update_display(self):
         self.update_memory_display()

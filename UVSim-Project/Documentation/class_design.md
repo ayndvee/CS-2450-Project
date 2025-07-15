@@ -414,6 +414,31 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 -  Post Condition:
     - If successful, memory and display are updated. Else, an error message is shown.
 
+ # load_from_editor(self)
+- Purpose:
+	- Validates the entries in the memory text editor and sends it into memory
+- Post Condition:
+	- If successful updates the memory display with new info
+	- If failure gives an error message
+
+ # cut_text(self, event =none)
+ - Purpose:
+	- Allows the user to be able to cut  text in the editor
+- Post Condition:
+	- If selected it will copy the item to clipboard and delete on editor
+
+ # copy_text(self, event =none)
+ - Purpose:
+	- Allows the user to be able to copy text in the editor
+- Post Condition:
+	- If selected it will copy the item to clipboard
+
+ # paste_text(self, event =none)
+ - Purpose:
+	- Allows the user to be able to paste text in the editor
+- Post Condition:
+	- If selected it will paste the item in the editor
+
  #  prev_memory(self) 
 -  Purpose:
     - Navigates the memory display to show 10 previous addresses.
@@ -464,9 +489,9 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 
  #  save_file(self) 
 -  Purpose:
-    - (Placeholder) Intended to allow saving the program or memory state.
+    - open a file explorer for the user to save file
 -  Post Condition:
-    - Not implemented yet.
+    - Saves a usable BasicML file into where the user wants
 
 
 

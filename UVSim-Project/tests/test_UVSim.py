@@ -1,5 +1,5 @@
 import unittest
-from model.UVSim import UVSim
+from model.UVSim import UVSIM
 from unittest.mock import patch
 from io import StringIO
 
