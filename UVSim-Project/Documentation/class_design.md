@@ -28,6 +28,16 @@ load programs, reset the state and execute instructions through CPU.
 	- False otherwise
 - Post Condition:
 	- Memory has all the program values
+ - # save_file(self, file_path)
+- Purpose:
+	- Reads a BasicML program from memory and loads it into a file
+- Parameters:
+	- file_path - Path to the output file
+- Return:
+	- True if the file is successfully saved
+	- False otherwise
+- Post Condition:
+	- Memory has all the program values
 # reset(self)
 - Purpose:
 	- Resets the program to initial state
@@ -185,6 +195,13 @@ This acts as the Main Memory for the UVSim. It handles loading and getting and s
 - Post Condition:
 	- Valid lines loaded into memory and saved in spareMemory.
 	- Returns True if successful; False if error encountered.
+
+# getLines(self) -> bool
+- Purpose:
+	- Get a list of lines from memory to save the current program to a file.
+
+- Post Condition:
+	- Returns a list of signed string instructions.
 
 # reset(self)
 - Purpose:
@@ -464,9 +481,9 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 
  #  save_file(self) 
 -  Purpose:
-    - (Placeholder) Intended to allow saving the program or memory state.
+    - Saves the current memory state to a file.
 -  Post Condition:
-    - Not implemented yet.
+    - File of user's choice is created or updated with a copy of the current program's memory state.
 
 
 
@@ -474,3 +491,17 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 - The class only really has UI responsibilities and doesn't contain any core logic
 - The state is managed by the UVSIM core.
 - All user interaction goes through the GUI controls and updates the visuals only
+
+# Class: Globals
+
+## Purpose
+The Globals class holds various global variables.
+
+## Features
+-  MAX_VALUE : Placeholder for the maximum value an instruction in memory can hold, currently unused.
+-  MIN_VALUE : Placeholder for the minimum value an instruction in memory can hold, currently unused.
+-  STOP : Contains the value of the "end of file" instruction.
+-  MEMORYSIZE : Contains the maximum size of a valid BasicML program.
+-  DEFAULT_PRIMARY : Contains the default primary color.
+-  DEFAULT_OFF : Contains the default off color.
+-  INTERVAL : Determines the amount of time between instruction execution as a program is running.
