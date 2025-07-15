@@ -1,21 +1,21 @@
-MEMORYSIZE = 100
+from Util import Globals
 
 class Memory:
     def __init__(self) -> None:
         """Set up memory and spareMemory"""
-        self.memory = [0] * MEMORYSIZE
-        self.spareMemory = [0] * MEMORYSIZE
+        self.memory = [0] * Globals.MEMORYSIZE
+        self.spareMemory = [0] * Globals.MEMORYSIZE
 
     def load_program(self, lines: list[str]) -> bool:
         """Loads a program from a list of strings into memory"""
         for i, line in enumerate(lines):
-            if i >= MEMORYSIZE:
+            if i >= Globals.MEMORYSIZE:
                 print("Error too many lines for memory capacity")
                 return False
 
             line = line.strip()
 
-            if line == '-99999':
+            if line == Globals.STOP:
                 break
             if not line:
                 print(f"Error on line {i}: there is no line")
@@ -40,7 +40,7 @@ class Memory:
 
     def reset(self):
         """Reset memory to original spare copy"""
-        for i in range(MEMORYSIZE):
+        for i in range(Globals.MEMORYSIZE):
             self.memory[i] = self.spareMemory[i]
 
     def get(self, address: int) -> int:

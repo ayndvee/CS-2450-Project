@@ -1,3 +1,5 @@
+from Util import Globals\
+
 from enum import IntEnum
 
 class Opcode(IntEnum):
@@ -39,11 +41,11 @@ class CPU:
 
     def execute(self):
         while self.running:
-            if self.instruction_count >= 100:
+            if self.instruction_count >= Globals.MEMORYSIZE:
                 print("Error: Instruction pointer out of memory bounds.")
                 self.halt()
                 break
-            code, op = divmod(self.memory.get(self.instruction_count), 100)
+            code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE)
             method = self.OPCODES.get(code)
             if method is None:
                 raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")

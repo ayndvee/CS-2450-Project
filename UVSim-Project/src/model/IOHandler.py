@@ -1,17 +1,19 @@
+from Util import Globals
+
 class IOHandler:
     def __init__(self, gui_mode: bool = False):
         self.gui = gui_mode
-        self.input = -99999
+        self.input = Globals.STOP
         self.output = False
         self.outputValue = ""
 
     def read(self, address: int, memory) -> bool:
         if self.gui:
-            if self.input != -99999:
+            if self.input != Globals.STOP:
                 value = self.input
                 if value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5:
                     memory.set(address, int(value))
-                    self.input = -99999
+                    self.input = Globals.STOP
                     return True
                 return False
             return False
