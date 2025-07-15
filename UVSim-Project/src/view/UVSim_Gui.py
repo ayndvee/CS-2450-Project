@@ -8,6 +8,11 @@ import threading
 import time
 from tkinter import filedialog, messagebox
 from model.UVSim import UVSIM
+try:
+    from tkmacosx import Button
+except ImportError:
+    # fallback to tk.Button if tkmacosx isn't available
+    Button = tk.Button
 
 class UVSIMGUI:
     def __init__(self, root, sim):
@@ -22,16 +27,17 @@ class UVSIMGUI:
         root.title("UVSIM")
 
         
+        
         ## Create the memory title and the memory layout
         header_frame = tk.Frame(root)
         header_frame.pack(fill=tk.X, pady=(10, 0), padx=10)
-        tk.Button(header_frame, text= "Reset Theme", command= lambda: self.controller.reset_theme()).pack(side = tk.LEFT)
-        tk.Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
+        Button(header_frame, text= "Reset Theme", command= lambda: self.controller.reset_theme()).pack(side = tk.LEFT)
+        Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
 
         self.program_editor = tk.Text(self.root, height=10, width=50, wrap=tk.NONE)
         tk.Label(root, text= "Memory Edit").pack(pady=(10,0))
         self.program_editor.pack()
-        tk.Button(self.root, text="Load to Memory", command= lambda: self.controller.load_from_editor()).pack(pady=10)
+        Button(self.root, text="Load to Memory", command= lambda: self.controller.load_from_editor()).pack(pady=10)
 
 
         tk.Label(root, text="Memory").pack(pady=(10, 0))
@@ -53,10 +59,10 @@ class UVSIMGUI:
         navigation = tk.Frame(root)
         navigation.pack(fill=tk.X, pady=5)
 
-        prev_button = tk.Button(navigation, text="Prev 10", command=lambda: self.controller.prev_memory())
+        prev_button = Button(navigation, text="Prev 10", command=lambda: self.controller.prev_memory())
         prev_button.grid(row=0, column=0, sticky='w', padx=10)
 
-        next_button = tk.Button(navigation, text="Next 10", command=lambda: self.controller.next_memory())
+        next_button = Button(navigation, text="Next 10", command=lambda: self.controller.next_memory())
         next_button.grid(row=0, column=10, sticky='e', padx=10)
 
         navigation.grid_columnconfigure(0, weight=1)
@@ -77,19 +83,19 @@ class UVSIMGUI:
         input_frame.pack(pady=5)
         self.input_entry = tk.Entry(input_frame, width=10)
         self.input_entry.pack(side=tk.LEFT, padx=(0,5))
-        self.input_button = tk.Button(input_frame, text="Submit Input", command=lambda: self.controller.submit_input()).pack(side=tk.LEFT)
+        self.input_button = Button(input_frame, text="Submit Input", command=lambda: self.controller.submit_input()).pack(side=tk.LEFT)
 
 
         ## Creates the Run, Step, Pause, and Reset buttons and has their layout
         control_frame = tk.Frame(root)
         control_frame.pack(fill=tk.X)
-        tk.Button(control_frame, text="Run", command=lambda: self.controller.run()).pack(side=tk.LEFT, padx=30)
-        tk.Button(control_frame, text="Step", command=lambda: self.controller.step()).pack(side=tk.LEFT, padx=80)
-        tk.Button(control_frame, text="Pause", command=lambda: self.controller.pause()).pack(side=tk.LEFT, padx=80)
-        tk.Button(control_frame, text="Reset", command=lambda: self.controller.reset()).pack(side=tk.LEFT, padx=30)
+        Button(control_frame, text="Run", command=lambda: self.controller.run()).pack(side=tk.LEFT, padx=30)
+        Button(control_frame, text="Step", command=lambda: self.controller.step()).pack(side=tk.LEFT, padx=80)
+        Button(control_frame, text="Pause", command=lambda: self.controller.pause()).pack(side=tk.LEFT, padx=80)
+        Button(control_frame, text="Reset", command=lambda: self.controller.reset()).pack(side=tk.LEFT, padx=30)
 
         ## Creates the Load Program Button
-        tk.Button(root, text="Load Program", command=lambda: self.controller.load_program()).pack(pady=5)
+        Button(root, text="Load Program", command=lambda: self.controller.load_program()).pack(pady=5)
 
         ## Creates the Output label and its box
         tk.Label(root, text="Output:").pack()
@@ -97,7 +103,7 @@ class UVSIMGUI:
         self.output_box.pack()
 
         ## Creates the save file button
-        tk.Button(root, text="Save File", command= lambda: self.controller.save_file()).pack(pady=5)
+        Button(root, text="Save File", command= lambda: self.controller.save_file()).pack(pady=5)
         self.update_display()
 
     def bind_controller(self, controller):
@@ -169,6 +175,8 @@ class UVSIMGUI:
             widget.configure(bg=primary_color, fg="black", activebackground= off_color)
         elif isinstance(widget, tk.Button):
             widget.configure(bg = off_color, fg= 'black', activebackground= primary_color)
+        elif isinstance(widget, Button):
+            widget.configure(bg = off_color, fg= 'black', activebackground= primary_color, bd= 1, highlightthickness=0, highlightbackground=off_color) 
         elif isinstance(widget, tk.Entry):
             widget.configure(bg=off_color, fg="black", insertbackground="black")
         elif isinstance(widget, tk.Text):
