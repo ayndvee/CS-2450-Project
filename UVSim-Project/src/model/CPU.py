@@ -62,8 +62,12 @@ class CPU:
     def store(self, addr): self.memory.set(addr, self.accumulator)
 
     # Math
-    def add(self, addr): self.accumulator += self.memory.get(addr)
-    def subtract(self, addr): self.accumulator -= self.memory.get(addr)
+    def add(self, addr):
+        self.accumulator += self.memory.get(addr)
+        self.accumulator %= 10000
+    def subtract(self, addr):
+        self.accumulator -= self.memory.get(addr)
+        self.accumulator %= 10000
     def divide(self, addr):
         if self.memory.get(addr) == 0:
             raise ZeroDivisionError("Error: Division by zero")
