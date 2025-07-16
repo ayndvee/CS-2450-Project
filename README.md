@@ -1,5 +1,17 @@
 # CS-2450 Project
 
+# macOS Compatibility
+If you're using macOS, you'll need to install the tkmacosx package to ensure proper button styling and full theme support, as native macOS buttons may not respect color settings.
+
+Install it with:
+```
+pip install tkmacosx
+```
+
+The app will still run without it, but certain visual elements (like button colors and borders) may not appear as intended on macOS without this package.
+
+
+
 ## Running the Program
 Run the program from the src folder.
 The program can be run in two different ways:
