@@ -11,3 +11,5 @@ class Globals:
     CONFIG_FILE = CONFIG_FILE = os.path.join(os.path.dirname(__file__), '..', 'config.json')
 
     INTERVAL = 500
+
+    MODULO = 10000

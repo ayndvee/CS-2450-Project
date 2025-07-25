@@ -64,17 +64,32 @@ class CPU:
     # Math
     def add(self, addr):
         self.accumulator += self.memory.get(addr)
-        self.accumulator %= 10000
+        if (self.accumulator < 0):
+            self.accumulator = self.accumulator * -1
+            self.accumulator %= Globals.MODULO
+            self.accumulator = self.accumulator * -1
+        else:
+            self.accumulator %= Globals.MODULO
     def subtract(self, addr):
         self.accumulator -= self.memory.get(addr)
-        self.accumulator %= 10000
+        if (self.accumulator < 0):
+            self.accumulator = self.accumulator * -1
+            self.accumulator %= Globals.MODULO
+            self.accumulator = self.accumulator * -1
+        else:
+            self.accumulator %= Globals.MODULO
     def divide(self, addr):
         if self.memory.get(addr) == 0:
             raise ZeroDivisionError("Error: Division by zero")
         self.accumulator //= self.memory.get(addr)
     def multiply(self, addr):
         self.accumulator *= self.memory.get(addr)
-        self.accumulator %= 10000
+        if (self.accumulator < 0):
+            self.accumulator = self.accumulator * -1
+            self.accumulator %= Globals.MODULO
+            self.accumulator = self.accumulator * -1
+        else:
+            self.accumulator %= Globals.MODULO
 
     # Control
     def branch(self, operand: int) -> None:
