@@ -6,7 +6,8 @@ import os
 import tkinter as tk
 import threading
 import time
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
+from view.UVSim_TabManager import TabManager
 from model.UVSim import UVSIM
 try:
     from tkmacosx import Button
@@ -24,6 +25,8 @@ class UVSIMGUI:
         self.labels = []
         self.mem_start = 0
         self.controller = None
+        self.style = ttk.Style(self.root)
+        self.style.theme_use("clam")   
         root.title("UVSIM")
 
         
@@ -34,11 +37,17 @@ class UVSIMGUI:
         Button(header_frame, text= "Reset Theme", command= lambda: self.controller.reset_theme()).pack(side = tk.LEFT)
         Button(header_frame, text="Change Theme", command=lambda: self.controller.change_theme()).pack(side=tk.RIGHT)
 
-        self.program_editor = tk.Text(self.root, height=10, width=50, wrap=tk.NONE)
-        tk.Label(root, text= "Memory Edit").pack(pady=(10,0))
-        self.program_editor.pack()
-        Button(self.root, text="Load to Memory", command= lambda: self.controller.load_from_editor()).pack(pady=10)
+        self.tab_manager = TabManager(self.root)
+        #self.apply_notebook_style()
+        self.tab_manager.bind_tab_change(self.on_tab_changed)
+        tk.Label(root, text="Memory Edit").pack(pady=(10,0))
+        Button(self.root, text="Load to Memory", command=lambda: self.controller.load_from_editor()).pack(pady=10)
 
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(pady=5)
+
+        Button(button_frame, text="New File", command=lambda: self.tab_manager.add_tab()).pack(side=tk.LEFT)
+        Button(button_frame, text="Close File", command=lambda: self.tab_manager.close_tab()).pack(side=tk.LEFT)
 
         tk.Label(root, text="Memory").pack(pady=(10, 0))
         memory_frame = tk.LabelFrame(root, padx=10, pady=10, borderwidth=2, relief="groove")
@@ -89,10 +98,10 @@ class UVSIMGUI:
         ## Creates the Run, Step, Pause, and Reset buttons and has their layout
         control_frame = tk.Frame(root)
         control_frame.pack(fill=tk.X)
-        Button(control_frame, text="Run", command=lambda: self.controller.run()).pack(side=tk.LEFT, padx=30)
-        Button(control_frame, text="Step", command=lambda: self.controller.step()).pack(side=tk.LEFT, padx=80)
-        Button(control_frame, text="Pause", command=lambda: self.controller.pause()).pack(side=tk.LEFT, padx=80)
-        Button(control_frame, text="Reset", command=lambda: self.controller.reset()).pack(side=tk.LEFT, padx=30)
+        Button(control_frame, text="Run", command=lambda: self.controller.run()).pack(side=tk.LEFT, padx=30, expand=True)
+        Button(control_frame, text="Step", command=lambda: self.controller.step()).pack(side=tk.LEFT, padx=80,expand=True)
+        Button(control_frame, text="Pause", command=lambda: self.controller.pause()).pack(side=tk.LEFT, padx=80,expand=True)
+        Button(control_frame, text="Reset", command=lambda: self.controller.reset()).pack(side=tk.LEFT, padx=30,expand=True)
 
         ## Creates the Load Program Button
         Button(root, text="Load Program", command=lambda: self.controller.load_program()).pack(pady=5)
@@ -106,17 +115,34 @@ class UVSIMGUI:
         Button(root, text="Save File", command= lambda: self.controller.save_file()).pack(pady=5)
         self.update_display()
 
+    def get_current_editor(self):
+        """Get the active text editor widget."""
+        return self.tab_manager.get_active_text_widget()
+
     def bind_controller(self, controller):
+        """Bind controller to the GUI and set up key bindings."""
         self.controller = controller
-        self.program_editor.bind("<Control-c>", self.controller.copy_text)
-        self.program_editor.bind("<Control-x>", self.controller.cut_text)
-        self.program_editor.bind("<Control-v>", self.controller.paste_text)
+        editor = self.get_current_editor()
+        if editor:
+            editor.bind("<Control-c>", self.controller.copy_text)
+            editor.bind("<Control-x>", self.controller.cut_text)
+            editor.bind("<Control-v>", self.controller.paste_text)
+        self.tab_manager.notebook.bind("<<NotebookTabChanged>>", lambda e: self._rebind_editor_keys(), add= "+")
+    
+    def _rebind_editor_keys(self):
+        """Rebind key shortcuts for the current editor tab."""
+        editor = self.get_current_editor()
+        if editor:
+            editor.bind("<Control-c>", self.controller.copy_text)
+            editor.bind("<Control-x>", self.controller.cut_text)
+            editor.bind("<Control-v>", self.controller.paste_text)
 
     def update_display(self):
+        """Update memory display and status labels."""
         self.update_memory_display()
         self.update_status()
     def update_memory_display(self):
-        # Update memory display for addresses from memory_start to memory_start+9
+        """Update the visible memory address and value labels."""
         for i, row_labels in enumerate(self.labels):
             for j, (addr_label, val_label) in enumerate(row_labels):
                 mem_index = self.mem_start + i*5 + j
@@ -130,55 +156,124 @@ class UVSIMGUI:
                 addr_label.config(text=f"Addr: {mem_index:02d}")
                 val_label.config(text=f"Value: {value_str}")
     def update_status(self):
-        # Update accumulator label
+        """Update the accumulator and instruction number labels."""
         acc_value = getattr(self.cpu, "accumulator", 0)
         self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
 
-        # Update instruction number label
+        
         instr_num = getattr(self.cpu, "instruction_count", 0)
         if (instr_num > 0):
             instr_num -= 1
         self.instruction_label.config(text=f"Instruction #: {instr_num:02d}")
 
 
-    #Prints messages to the Output location
+    
     def print_output(self, message):
+        """Print a message to the output text box."""
         self.output_box.config(state='normal')
         self.output_box.insert(tk.END, message + "\n")
         self.output_box.see(tk.END)
         self.output_box.config(state='disabled')
       
-    #sets the theme for the UVSIMGUI
+    def build_theme(self, primary_color, off_color):
+        """Build and return the theme dictionary based on given colors."""
+        return {
+            "*": {
+                "bg": primary_color,
+                "fg": "black"
+            },
+            "Label": {
+                "bg": primary_color,
+                "fg": "black"
+            },
+            "Button": {
+                "bg": off_color,
+                "fg": "black",
+                "activebackground": primary_color
+            },
+            "Entry": {
+                "bg": off_color,
+                "fg": "black",
+                "insertbackground": "black"
+            },
+            "Text": {
+                "bg": off_color,
+                "fg": "black",
+                "insertbackground": "black"
+            },
+            "LabelFrame": {
+                "bg": primary_color,
+                "highlightbackground": "black",
+                "highlightthickness": 2,
+                "bd": 0,
+                "relief": "flat"
+            },
+            "Frame": {
+                "bg": primary_color
+            },
+            "CustomButton": {
+                "bg": off_color,
+                "fg": "black",
+                "activebackground": primary_color,
+                "bd": 1,
+                "highlightthickness": 0,
+                "highlightbackground": off_color
+            }
+        }
     def set_theme(self, primary_color, off_color):
 
         """
-        Updates the GUIs background and its widgets to have the theme applied to them as well.\
+        Updates the GUIs background and its widgets to have the theme applied to them as well.
         """
+        theme = self.build_theme(primary_color, off_color)
         self.root.configure(bg =primary_color)
 
         for widget in self.root.winfo_children():
-            if isinstance(widget, tk.LabelFrame) and not widget.cget("text"):
-                widget.config(highlightbackground= "black", highlightthickness= 2, bd = 0, relief= 'flat')
-            if isinstance(widget, tk.Frame) or isinstance(widget, tk.LabelFrame):
-                widget.configure(bg=primary_color)
-                for child in widget.winfo_children():
-                    self._apply_theme_to_widget(child, primary_color, off_color)
-            else:
-                self._apply_theme_to_widget(widget, primary_color, off_color)
+            self._apply_theme_to_widget(widget, theme)
 
-    def _apply_theme_to_widget(self, widget, primary_color, off_color):
+        self.set_notebook_theme(primary_color, off_color)
+    
+    def set_notebook_theme(self, primary_color, off_color):
+        """Configure the notebook widget's style for the theme."""
+        self.style.configure("Custom.TNotebook", background=primary_color, borderwidth=0)
+        self.style.configure("Custom.TNotebook.Tab", background=off_color, foreground="black", padding=[10,5])
+        self.style.configure("Custom.TNotebook.focus", background=off_color)
+        self.style.configure("Custom.TNotebook.label", background=off_color)
+        self.style.configure("Custom.TNotebook.padding", background=off_color)
+        self.style.map("Custom.TNotebook.Tab",
+            background=[("selected", off_color)],
+            foreground=[("selected", "black"), ("!selected", "gray20")]
+        )
+        self.tab_manager.notebook.configure(style="Custom.TNotebook")
+        self.tab_manager.notebook.update_idletasks()
+
+    def _apply_theme_to_widget(self, widget, theme):
 
         """
         Applies the theme colors to specific widgets based on its type. 
         """
-        if isinstance(widget, tk.Label):
-            widget.configure(bg=primary_color, fg="black", activebackground= off_color)
-        elif isinstance(widget, tk.Button):
-            widget.configure(bg = off_color, fg= 'black', activebackground= primary_color)
-        elif isinstance(widget, Button):
-            widget.configure(bg = off_color, fg= 'black', activebackground= primary_color, bd= 1, highlightthickness=0, highlightbackground=off_color) 
-        elif isinstance(widget, tk.Entry):
-            widget.configure(bg=off_color, fg="black", insertbackground="black")
-        elif isinstance(widget, tk.Text):
-            widget.configure(bg=off_color, fg="black", insertbackground="black", state='normal')
-            widget.config(state='disabled')
+        widget_type = widget.winfo_class()
+        for option, value in theme.get("*", {}).items():
+            try:
+                widget[option] = value
+            except tk.TclError:
+                pass
+
+        if widget_type in theme:
+            for option, value in theme[widget_type].items():
+                try:
+                    widget[option] = value
+                except tk.TclError:
+                    pass
+        for child in widget.winfo_children():
+            self._apply_theme_to_widget(child, theme)
+
+    def on_tab_changed(self, event):
+        """Handle event when the notebook tab changes, reloading editor content."""
+        editor = self.get_current_editor()
+        if editor:
+            content = editor.get("1.0", tk.END).strip().splitlines()
+            if self.controller:
+                self.controller.reload_memory_from_editor(content)
+        else:
+            self.print_output("No active editor tab found.")

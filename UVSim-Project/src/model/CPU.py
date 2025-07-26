@@ -17,7 +17,14 @@ class Opcode(IntEnum):
     HALT = 43
 
 class CPU:
+    """
+    A simple CPU that executes instructions from memory
+    
+    """
     def __init__(self, memory, io_handler):
+        """
+        Sets up the CPU with memory and I/O Handler
+        """
         self.memory = memory
         self.io = io_handler
         self.accumulator = 0
@@ -40,6 +47,11 @@ class CPU:
         }
 
     def execute(self):
+        """
+        Begins the execution cycle: getting the instruction, finding the opcode that matches, and then executing
+        that instruction until a HALT instruction or error occurs.
+        
+        """
         while self.running:
             if self.instruction_count >= Globals.MEMORYSIZE:
                 print("Error: Instruction pointer out of memory bounds.")
@@ -54,15 +66,34 @@ class CPU:
             self.instruction_count += 1
 
     # I/O
-    def read(self, addr): self.running = self.io.read(addr, self.memory)
-    def write(self, addr): self.io.write(addr, self.memory)
+    def read(self, addr):
+        """
+        Read input from the user and store it in memory at the specified address.
+        """
+        self.running = self.io.read(addr, self.memory)
+    def write(self, addr):
+        """
+        Output the value from memory at the specified address.
+        """
+        self.io.write(addr, self.memory)
 
     # Load/Store
-    def load(self, addr): self.accumulator = self.memory.get(addr)
-    def store(self, addr): self.memory.set(addr, self.accumulator)
+    def load(self, addr):
+        """
+        Load a value from memory into the accumulator.
+        """
+        self.accumulator = self.memory.get(addr)
+    def store(self, addr):
+        """
+        Store the value from the accumulator into memory.
+        """
+        self.memory.set(addr, self.accumulator)
 
     # Math
     def add(self, addr):
+        """
+        Add the value from memory to the accumulator.
+        """
         self.accumulator += self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
@@ -71,6 +102,9 @@ class CPU:
         else:
             self.accumulator %= Globals.MODULO
     def subtract(self, addr):
+        """
+        Subtract the value from memory to the accumulator.
+        """
         self.accumulator -= self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
@@ -79,10 +113,18 @@ class CPU:
         else:
             self.accumulator %= Globals.MODULO
     def divide(self, addr):
+        """
+        Divide the accumulator by the value from memory.
+
+        Raises ZeroDivisionError if the value is zero.
+        """
         if self.memory.get(addr) == 0:
             raise ZeroDivisionError("Error: Division by zero")
         self.accumulator //= self.memory.get(addr)
     def multiply(self, addr):
+        """
+        Multiply the accumulator by the value from memory.
+        """
         self.accumulator *= self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
@@ -93,7 +135,9 @@ class CPU:
 
     # Control
     def branch(self, operand: int) -> None:
-        """Check to make sure operand is in the bounds of memory"""
+        """
+        Unconditionally jump to a specific memory address.
+        """
         if 0 <= operand < len(self.memory.memory):
             self.instruction_count = operand
         #If it isn't stop the program 
@@ -101,20 +145,27 @@ class CPU:
             print("Invalid operand: Out of Memory Range")
             self.halt()
     def branchNeg(self, operand: int) -> None:
-        """If the accumulator is negative branch to the new location in memory"""
+        """
+        Conditionally jump if the accumulator is negative
+        """
         if self.accumulator < 0:
             self.branch(operand)
         
     def branchZero(self, operand: int) -> None:
-        """If the accumulator is 0, just to the new location in memory"""
+        """
+        Conditionally jump if the accumulator is zero.
+        """
         if self.accumulator == 0:
             self.branch(operand)
         
     def halt(self, _=None) -> None:
-        """Set running to false because we are stopping the program."""
+        """Halt execution of the CPU"""
         self.running = False
 
     def reset(self):
+        """
+        Reset the CPU state to its initial state.
+        """
         self.accumulator = 0
         self.instruction_count = 0
         self.running = True
