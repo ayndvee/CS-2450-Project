@@ -37,6 +37,12 @@ class Memory:
     def getLines(self) -> list[str]:
         """Returns the memory as a list of strings"""
         return [f"{value:+05d}" for value in self.memory]
+    
+    def clear(self):
+        """Clears memory when updating new tab"""
+        for i in range(Globals.MEMORYSIZE):
+            self.memory[i] = 0
+            self.spareMemory[i] = 0
 
     def reset(self):
         """Reset memory to original spare copy"""

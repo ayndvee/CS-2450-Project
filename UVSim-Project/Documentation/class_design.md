@@ -365,7 +365,32 @@ The UVSIMGUI class helps provide a graphical user interface for the UVSIM simula
 	- Submits the input that the user has input
 - Post Conditions:
 	- User input is now in the simulator and execution continues and the GUI is updated
+# get_current_editor(self)
+- Purpose:
+	- Returns the currently active Text widget from the tab manager.
 
+- Returns:
+	- The currently selected Text widget, or None if no tab is selected.
+
+# set_notebook_theme(self, primary_color, off_color)
+- Purpose
+	- Sets a custom visual style for the notebook and its tabs.
+
+- Parameters
+	- primary_color: The background color for the entire notebook widget.
+	- off_color: The default tab background color when not selected.
+
+- Post Condition
+	- The notebook and tab colors are updated to match the provided theme.
+
+# on_tab_changed(self, event)
+- Purpose
+	- Handles behavior when a tab change event occurs. Updates memory from the editor and refreshes tab styling.
+- Parameters
+	- event: The event object triggered by the <<NotebookTabChanged>> event.
+- Post Condition
+	- If an editor is selected, its content is passed to the controller to reload memory. Tab appearance is also updated.
+		
 # def set_theme(self, primary_color, off_color)
 - Purpose:
 	- Updates the GUIs background and its widgets to have the theme applied to them as well.
@@ -382,6 +407,13 @@ The UVSIMGUI class helps provide a graphical user interface for the UVSIM simula
 
 ## Purpose
 The UVSIM_Controller class acts as the bridge between the simulation logic (model) and the graphical interface (view). It handles user interactions, manages the execution flow, processes input/output, and updates the GUI state accordingly.
+
+
+
+# Class: ExecutionController
+
+## Purpose
+Handles the Execution side of the controller
 
 ## Features
 -  sim : Instance of the simulator, containing memory, CPU, and IO handler.
@@ -432,18 +464,18 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 -  Post Condition:
     - Simulator returns to its loaded state and GUI is updated.
 
- #  load_program(self) 
--  Purpose:
-    - Opens file dialog and loads a program file into memory.
--  Post Condition:
-    - If successful, memory and display are updated. Else, an error message is shown.
-
  # load_from_editor(self)
 - Purpose:
 	- Validates the entries in the memory text editor and sends it into memory
 - Post Condition:
 	- If successful updates the memory display with new info
 	- If failure gives an error message
+ # reload_memory_from_editor(self, content_lines)
+- Purpose:
+	- Reloads the content in the memory from the text editor when switching tabs
+- Post Condition:
+	- If successful updates the memory display
+	- If failute gives an error message
 
  # cut_text(self, event =none)
  - Purpose:
@@ -481,6 +513,11 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 -  Post Condition:
     - Input is stored, simulator resumes, and GUI updates.
 
+# Class: ThemeController
+
+## Purpose
+Handles the theme aspects of the Controller
+
  #  apply_theme(self) 
 -  Purpose: 
     - Applies saved or default theme to the GUI.
@@ -511,6 +548,15 @@ The UVSIM_Controller class acts as the bridge between the simulation logic (mode
 - Post Condition:
 	- GUI and widgets are back to the original theme colors
 
+# Class FileController
+
+## Purpose
+Handles the File interactions of the controller
+ #  load_program(self) 
+-  Purpose:
+    - Opens file dialog and loads a program file into memory.
+-  Post Condition:
+    - If successful, memory and display are updated. Else, an error message is shown.
  #  save_file(self) 
 -  Purpose:
     - Saves the current memory state to a file.
@@ -537,3 +583,94 @@ The Globals class holds various global variables.
 -  DEFAULT_PRIMARY : Contains the default primary color.
 -  DEFAULT_OFF : Contains the default off color.
 -  INTERVAL : Determines the amount of time between instruction execution as a program is running.
+
+# Class TabManager
+
+## Purpose
+
+The TabManager class manages a tabbed text interface using Tkinter's ttk.Notebook. It allows for dynamic creation, removal, and interaction with tabs containing Text widgets. This is useful for editors or interfaces with multiple documents or views.
+
+---
+
+## Features
+
+notebook - An instance of ttk.Notebook used to manage the tabs.
+tabs - A dictionary mapping tab IDs to their corresponding Text widgets.
+
+---
+
+## Functions
+
+---
+
+# __init__(self, root)
+
+- Purpose
+    - Initializes the TabManager by creating a ttk.Notebook inside the provided root window.
+
+- Parameters 
+
+    - root: The parent Tkinter widget (usually the root window or a frame).
+
+- Post Condition 
+    - A notebook interface is displayed and ready for tab management.
+
+---
+
+# add_tab(self, title="Untitled", content="")
+
+- Purpose 
+    - Creates a new tab with a Text widget, optionally populated with initial content.
+
+- Parameters 
+
+    - title: The title shown on the tab. Default is "Untitled".
+    - content: The initial string to place in the Text widget.
+
+- Returns
+    - The newly created Text widget.
+
+- Post Condition 
+    - A new tab is added and selected, containing the specified content.
+
+---
+
+# bind_tab_change(self, callback)
+
+- Purpose- 
+    - Allows an external function to be called whenever the active tab changes.
+
+- Parameters
+    - callback: A function to call when the tab changes (will receive a <<NotebookTabChanged>> event).
+
+- Post Condition
+    - The callback is bound to tab change events.
+
+---
+
+# get_active_text_widget(self)
+
+- Purpose
+    - Gets the Text widget associated with the currently selected tab.
+
+- Returns
+
+    - The active Text widget, or None if no active tab exists.
+
+- Post Condition
+    - Provides access to the contents of the active tab.
+
+---
+
+# close_tab(self, tab_id=None)
+
+- Purpose
+    - Closes the tab with the given ID. If no ID is provided, closes the currently selected tab.
+
+- Parameters 
+
+    - tab_id: The ID of the tab to close. If None, closes the active tab.
+
+- Post Condition 
+    - The specified tab is removed from the notebook and its reference is deleted from tabs.
+
