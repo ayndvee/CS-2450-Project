@@ -26,6 +26,14 @@ class FileController:
                 editor_content = "".join(editor_lines)
                 text_widget = self.view.tab_manager.add_tab(title=filename, content = editor_content)
                 if self.sim.memory.load_program(memory_lines):
+                    word_length = []
+                    for line in memory_lines:
+                        stripped_word = line.strip()
+                        digits_only = stripped_word.lstrip("+-")
+                        if digits_only.isdigit():
+                            word_length.append(len(digits_only))
+                    total_length = max(word_length) if word_length else 0
+                    self.sim.memory.word_length = total_length
                     self.view.print_output("Successfully loaded file")
                     self.view.update_display()
                     editor = self.view.get_current_editor()

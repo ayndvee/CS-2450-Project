@@ -14,12 +14,12 @@ class Memory:
         Returns True if loading is successful, False otherwise.
         """
 
-
+        self.word_length = None
         for i, line in enumerate(lines):
 
             line = line.strip()
 
-            if line == str(Globals.STOP):
+            if line == Globals.STOP:
                 break
             if not line:
                 print(f"Error on line {i}: there is no line")
@@ -34,7 +34,7 @@ class Memory:
             # Determine and enforce consistent word length across the file
             current_length = len(line[1:])
             if self.word_length is None:
-                if current_length not in (4, 6):
+                if current_length not in (Globals.MINWORDLEN, Globals.MAXWORDLEN):
                     print(f"Error on line {i}: unsupported word length {current_length}")
                     return False
                 self.word_length = current_length
@@ -44,7 +44,7 @@ class Memory:
                 return False
 
             # Memory check overflow
-            if (self.word_length == 4 and i >= Globals.MEMORYSIZE) or (self.word_length == 6 and i >= Globals.MEMORYSIZE_LARGE):
+            if (self.word_length == Globals.MINWORDLEN and i >= Globals.MEMORYSIZE) or (self.word_length == Globals.MAXWORDLEN and i >= Globals.MEMORYSIZE_LARGE):
                 print("Error: too many lines for memory capacity")
                 return False
             
@@ -60,7 +60,7 @@ class Memory:
     
     def getLines(self) -> list[str]:
         """Returns the memory as a list of strings"""
-        if self.word_length == 4:
+        if self.word_length == Globals.MINWORDLEN:
             return [f"{value:+05d}" for value in self.memory]
         else:
             return [f"{value:+07d}" for value in self.memory]
