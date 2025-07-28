@@ -29,6 +29,7 @@ class CPU:
         self.io = io_handler
         self.accumulator = 0
         self.instruction_count = 0
+        self.word_length = None
         self.running = True
 
         self.OPCODES = {
@@ -57,13 +58,22 @@ class CPU:
                 print("Error: Instruction pointer out of memory bounds.")
                 self.halt()
                 break
-            code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE)
-            method = self.OPCODES.get(code)
-            if method is None:
-                raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
-            handler = getattr(self, method)
-            handler(op)   
-            self.instruction_count += 1
+            if (self.word_length == 4):
+                code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE)
+                method = self.OPCODES.get(code)
+                if method is None:
+                    raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
+                handler = getattr(self, method)
+                handler(op)
+                self.instruction_count += 1
+            if (self.word_length == 6):
+                code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE * 10)
+                method = self.OPCODES.get(code)
+                if method is None:
+                    raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
+                handler = getattr(self, method)
+                handler(op)
+                self.instruction_count += 1
 
     # I/O
     def read(self, addr):
@@ -97,7 +107,10 @@ class CPU:
         self.accumulator += self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
-            self.accumulator %= Globals.MODULO
+            if (self.word_length == 4):
+                self.accumulator %= Globals.MODULO
+            else:
+                self.accumulator %= Globals.MODULO_LARGE
             self.accumulator = self.accumulator * -1
         else:
             self.accumulator %= Globals.MODULO
@@ -108,7 +121,10 @@ class CPU:
         self.accumulator -= self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
-            self.accumulator %= Globals.MODULO
+            if (self.word_length == 4):
+                self.accumulator %= Globals.MODULO
+            else:
+                self.accumulator %= Globals.MODULO_LARGE
             self.accumulator = self.accumulator * -1
         else:
             self.accumulator %= Globals.MODULO
@@ -121,6 +137,15 @@ class CPU:
         if self.memory.get(addr) == 0:
             raise ZeroDivisionError("Error: Division by zero")
         self.accumulator //= self.memory.get(addr)
+        if (self.accumulator < 0):
+            self.accumulator = self.accumulator * -1
+            if (self.word_length == 4):
+                self.accumulator %= Globals.MODULO
+            else:
+                self.accumulator %= Globals.MODULO_LARGE
+            self.accumulator = self.accumulator * -1
+        else:
+            self.accumulator %= Globals.MODULO
     def multiply(self, addr):
         """
         Multiply the accumulator by the value from memory.
@@ -128,7 +153,10 @@ class CPU:
         self.accumulator *= self.memory.get(addr)
         if (self.accumulator < 0):
             self.accumulator = self.accumulator * -1
-            self.accumulator %= Globals.MODULO
+            if (self.word_length == 4):
+                self.accumulator %= Globals.MODULO
+            else:
+                self.accumulator %= Globals.MODULO_LARGE
             self.accumulator = self.accumulator * -1
         else:
             self.accumulator %= Globals.MODULO

@@ -16,9 +16,9 @@ class FileController:
 
                 with open(file_path, 'r') as f:
                     for i, line in enumerate(f):
-                        if i >= Globals.MEMORYSIZE:
+                        if i >= Globals.MEMORYSIZE_LARGE:
                             self.view.print_output("Error: Program is too large")
-                            break
+                            return
                         stripped = line.strip()
                         editor_lines.append(stripped + "\n")
                         memory_lines.append(stripped)

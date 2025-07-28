@@ -4,6 +4,7 @@ class Globals:
     MIN_VALUE = -9999
     STOP = '-99999'
     MEMORYSIZE = 100
+    MEMORYSIZE_LARGE = 250
 
     DEFAULT_PRIMARY = "#4C721D"
     DEFAULT_OFF = "#FFFFFF"
@@ -13,3 +14,4 @@ class Globals:
     INTERVAL = 500
 
     MODULO = 10000
+    MODULO_LARGE = 1000000

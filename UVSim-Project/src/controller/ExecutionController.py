@@ -29,6 +29,7 @@ class ExecutionController:
 
     def _execute_step(self):
         """Recursively executes instructions with delay, updates display, and handles output."""
+        self.cpu.word_length = self.memory.word_length
         if self.running and self.cpu.running and not self.paused:
             self.step()
             if self.io.output:
@@ -42,13 +43,17 @@ class ExecutionController:
 
     def step(self):
         """Execute a single instruction and update GUI."""
+        self.cpu.word_length = self.memory.word_length
         self.io.gui = True
         try:
             if not self.cpu.running:
                 self.view.print_output("Simulator is not running. Please run the program first.")
                 return
             if self.cpu.running:
-                code, op = divmod(self.memory.memory[self.cpu.instruction_count], 100)
+                if self.memory.word_length == 4:
+                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], 100)
+                if self.memory.word_length == 6:
+                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], 1000)
                 method = self.cpu.OPCODES.get(code)
                 if method is None:
                     raise RuntimeError(f"Unknown opcode: {code}")
@@ -99,17 +104,18 @@ class ExecutionController:
             self.view.print_output("No active editor tab.")
             return False
         raw = editor.get("1.0", tk.END).strip().splitlines()
-        if len(raw) > Globals.MEMORYSIZE:
-            self.view.print_output("Error: Editor has more than 100 instructions.")
+        if len(raw) > Globals.MEMORYSIZE_LARGE:
+            self.view.print_output("Error: Editor has more than 250 instructions.")
             return False
 
         for i, line in enumerate(raw):
             line = line.strip()
             if not line or line == Globals.STOP:
                 break
-            if not line[0] in '+-' or not line[1:].isdigit() or len(line[1:]) != 4:
+            if not line[0] in '+-' or not line[1:].isdigit() or (len(line[1:]) != 4 and len(line[1:]) != 6):
                 self.view.print_output(f"Error on line {i}: Invalid instruction '{line}'")
                 return False
+            self.sim.memory.word_length = len(line[1:])
             self.memory.memory[i] = int(line)
             self.memory.spareMemory[i] = int(line)
         self.view.print_output("Editor contents loaded into memory.")
@@ -141,8 +147,8 @@ class ExecutionController:
         try:
             pasted = self.root.clipboard_get()
             current_text = self.program_editor.get("1.0", tk.END).strip().splitlines()
-            if len(current_text) + pasted.count("\n") > 100:
-                self.print_output("Paste would exceed 100 lines. Cancelled.")
+            if len(current_text) + pasted.count("\n") > Globals.MEMORYSIZE_LARGE:
+                self.print_output("Paste would exceed 250 lines. Cancelled.")
                 return "break"
             self.program_editor.insert(tk.INSERT, pasted)
         except tk.TclError:
