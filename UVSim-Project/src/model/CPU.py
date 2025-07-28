@@ -58,7 +58,7 @@ class CPU:
                 print("Error: Instruction pointer out of memory bounds.")
                 self.halt()
                 break
-            if (self.word_length == 4):
+            if (self.word_length == Globals.MINWORDLEN):
                 code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE)
                 method = self.OPCODES.get(code)
                 if method is None:
@@ -66,13 +66,14 @@ class CPU:
                 handler = getattr(self, method)
                 handler(op)
                 self.instruction_count += 1
-            if (self.word_length == 6):
+            if (self.word_length == Globals.MAXWORDLEN):
                 code, op = divmod(self.memory.get(self.instruction_count), Globals.MEMORYSIZE * 10)
                 method = self.OPCODES.get(code)
                 if method is None:
                     raise RuntimeError(f"Unknown opcode: {code} at Instruction: {self.instruction_count}")
                 handler = getattr(self, method)
                 handler(op)
+                
                 self.instruction_count += 1
 
     # I/O

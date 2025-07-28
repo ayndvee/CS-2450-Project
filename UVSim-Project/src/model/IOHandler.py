@@ -11,7 +11,7 @@ class IOHandler:
         if self.gui:
             if self.input != Globals.STOP:
                 value = self.input
-                if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5) or (value[0:].isdigit() and len(value) == 4):
+                if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) in (Globals.MINWORDLEN+1, Globals.MAXWORDLEN+1)):
                     memory.set(address, int(value))
                     self.input = Globals.STOP
                     return True
@@ -19,7 +19,7 @@ class IOHandler:
             return False
         else:
             value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
-            while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5):
+            while not (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == Globals.MINWORDLEN+1):
                 print("Invalid input. Please enter a signed 4-digit number like +1234 or -5678.")
                 value = input(f"Enter a signed 4-digit number for memory[{address}]: ")
             memory.set(address, int(value))

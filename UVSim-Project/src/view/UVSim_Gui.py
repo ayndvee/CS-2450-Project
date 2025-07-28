@@ -9,6 +9,7 @@ import time
 from tkinter import filedialog, messagebox, ttk
 from view.UVSim_TabManager import TabManager
 from model.UVSim import UVSIM
+from globals.Util import Globals
 try:
     from tkmacosx import Button
 except ImportError:
@@ -143,13 +144,21 @@ class UVSIMGUI:
         self.update_status()
     def update_memory_display(self):
         """Update the visible memory address and value labels."""
+        word_length = getattr(self.memory, 'word_length', None)
+        if word_length is None:
+            word_length = Globals.MINWORDLEN
+
+        total_width = word_length + 1
+
+        format_str = f"{{value:+0{total_width}d}}"
+
         for i, row_labels in enumerate(self.labels):
             for j, (addr_label, val_label) in enumerate(row_labels):
                 mem_index = self.mem_start + i*5 + j
                 try:
                     value = self.memory.get(mem_index)
                     # Make it a signed 4 digit value
-                    value_str = f"{value:+05d}"
+                    value_str = format_str.format(value = value)
                 except IndexError:
                     value_str = "----"
                 
@@ -158,7 +167,12 @@ class UVSIMGUI:
     def update_status(self):
         """Update the accumulator and instruction number labels."""
         acc_value = getattr(self.cpu, "accumulator", 0)
-        self.accumlator_label.config(text=f"Accumulator: {acc_value:+05d}")
+        word_length = getattr(self.memory, 'word_length', Globals.MIN_VALUE)
+        
+        if word_length is None:
+            word_length = Globals.MINWORDLEN
+        total_length = word_length +1
+        self.accumlator_label.config(text=f"Accumulator: {acc_value:+0{total_length}d}")
 
         
         instr_num = getattr(self.cpu, "instruction_count", 0)

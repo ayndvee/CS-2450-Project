@@ -48,6 +48,7 @@ class TestUVSIMGUI(unittest.TestCase):
         self.assertIn("04", self.gui.instruction_label.cget("text")) 
 
     def test_submit_input_sets_io_input(self):
+        self.sim.memory.word_length = 4
         self.gui.input_entry.insert(0, "+1234")
         self.controller.submit_input()
 
