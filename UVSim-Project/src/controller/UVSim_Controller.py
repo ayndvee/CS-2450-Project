@@ -7,7 +7,7 @@ class UVSIM_Controller:
         self.view = view
 
         self.execution = ExecutionController(sim, view)
-        self.file = FileController(sim, view)
+        self.file = FileController(sim, view, self.execution)
         self.theme = ThemeController(view)
 
         self.view.bind_controller(self)

@@ -2,7 +2,7 @@
 
 ## Overview
 
-UVSim is a group project we developed to simulate a simple virtual machine that runs programs written in a language called BasicML. It mimics the basic parts of a real computer, like memory, a CPU, and an accumulator register. The simulator has a 100-word memory, and each instruction is a four-digit number—where the first two digits represent the operation (like read, write, add, or branch) and the last two digits are the memory address the instruction works with. 
+UVSim is a group project we developed to simulate a simple virtual machine that runs programs written in a language called BasicML. It mimics the basic parts of a real computer, like memory, a CPU, and an accumulator register. The simulator has a 250-word memory, and each instruction is a four-digit or six-digit number—where the first two or three digits represent the operation (like read, write, add, or branch) and the last two or three digits are the memory address the instruction works with. 
 
 Our goal was to create a tool that lets students load, run, and test BasicML programs from the command line. This project helped us understand how machine instructions are processed step by step and how low-level program execution works.
 

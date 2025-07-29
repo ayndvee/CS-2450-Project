@@ -24,6 +24,7 @@ class ExecutionController:
         if self.running:
             return  # Already running
         self.running = True
+        self.cpu.running = True
         self.paused = False
         self._execute_step()
 
@@ -50,10 +51,10 @@ class ExecutionController:
                 self.view.print_output("Simulator is not running. Please run the program first.")
                 return
             if self.cpu.running:
-                if self.memory.word_length == 4:
-                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], 100)
-                if self.memory.word_length == 6:
-                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], 1000)
+                if self.memory.word_length == Globals.MINWORDLEN:
+                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], Globals.DIVMOD_SMALL)
+                if self.memory.word_length == Globals.MAXWORDLEN:
+                    code, op = divmod(self.memory.memory[self.cpu.instruction_count], Globals.DIVMOD_LARGE)
                 method = self.cpu.OPCODES.get(code)
                 if method is None:
                     raise RuntimeError(f"Unknown opcode: {code}")
@@ -85,13 +86,14 @@ class ExecutionController:
         self.view.print_output("Program has been paused")
 
     # Resets the simulator to its initial state
-    def reset(self):
+    def reset(self, silent= False):
         """Reset the simulator and display to the initial state."""
         self.running = False
         self.paused = False
         self.waiting_input = False
         self.cpu.reset()
-        self.view.print_output("Program has been reset.")
+        if not silent:
+            self.view.print_output("Program has been reset.")
         self.view.update_display()
 
     
@@ -107,18 +109,32 @@ class ExecutionController:
         if len(raw) > Globals.MEMORYSIZE_LARGE:
             self.view.print_output("Error: Editor has more than 250 instructions.")
             return False
+        
+        word_length = None
 
         for i, line in enumerate(raw):
             line = line.strip()
             if not line or line == Globals.STOP:
                 break
-            if not line[0] in '+-' or not line[1:].isdigit() or (len(line[1:]) != 4 and len(line[1:]) != 6):
+            if not line[0] in '+-' or not line[1:].isdigit() or len(line[1:]) not in (Globals.MINWORDLEN, Globals.MAXWORDLEN):
                 self.view.print_output(f"Error on line {i}: Invalid instruction '{line}'")
                 return False
-            self.sim.memory.word_length = len(line[1:])
+            
+            current_length = len(line[1:])
+            if word_length is None:
+                if current_length not in (Globals.MINWORDLEN, Globals.MAXWORDLEN):
+                    self.view.print_output(f"Error on line {i}: unsupported word length {current_length}")
+                    return False
+                word_length = current_length
+            elif current_length != word_length:
+                self.view.print_output(f"Error on line {i}: inconsistent word length (expected {word_length}, got {current_length})")
+                return False
+            
             self.memory.memory[i] = int(line)
             self.memory.spareMemory[i] = int(line)
-        self.view.print_output("Editor contents loaded into memory.")
+        self.memory.word_length = word_length
+
+        self.view.print_output(f"Editor contents loaded into memory.")
         self.view.update_display()
         return True
     
@@ -157,18 +173,20 @@ class ExecutionController:
 
     #Gets the 10 previous Memory locations
     def prev_memory(self):
-        self.view.mem_start = max(0, self.view.mem_start - 10)
+        self.view.mem_start = max(0, self.view.mem_start - Globals.MEMORY_TABLE_SIZE)
         self.view.update_display()
 
     #Gets the 10 next Memory locations
     def next_memory(self):
-        self.view.mem_start = min(len(self.memory.memory) - 10, self.view.mem_start + 10)
+        self.view.mem_start = min(len(self.memory.memory) - Globals.MEMORY_TABLE_SIZE, self.view.mem_start + Globals.MEMORY_TABLE_SIZE)
         self.view.update_display()
 
     # Submits the input from the input entry box to the simulator
     def submit_input(self):
         value = self.view.input_entry.get()
-        if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == 5) or (value[0:].isdigit() and len(value) == 4):
+        expected_digits = getattr(self.memory, 'word_length', Globals.MINWORDLEN)
+        total_length_sign = expected_digits + 1
+        if (value.startswith(('+', '-')) and value[1:].isdigit() and len(value) == total_length_sign) or (value[0:].isdigit() and len(value) == expected_digits):
             self.io.input = value
             if (self.cpu.instruction_count >= 0):
                 self.cpu.instruction_count -= 1  # Decrement instruction count to reprocess the read instruction
@@ -178,5 +196,5 @@ class ExecutionController:
             self.run()
             self.view.update_display()
         else:
-            self.view.print_output("Invalid input format, input should be a signed 4-digit integer")
+            self.view.print_output(f"Invalid input format, input should be a signed {expected_digits}-digit integer")
             

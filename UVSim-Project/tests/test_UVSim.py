@@ -12,9 +12,10 @@ class TestUVSIM(unittest.TestCase):
     def setUp(self):
         ## This sets up a UVSim instance for each test case
         self.sim = UVSIM()
-        self.sim.running = True
-        self.sim.instruction_count = 0
-        self.sim.accumulator = 0
+        self.sim.cpu.running = True
+        self.sim.cpu.instruction_count = 0
+        self.sim.cpu.accumulator = 0
+        self.sim.memory.word_length = 4
 
 
 
@@ -25,7 +26,7 @@ class TestUVSIM(unittest.TestCase):
         self.assertEqual(self.sim.cpu.instruction_count, 42)
     def test_branch_out_of_bounds(self):
         ## Expected to set running to False if we have operand out of bounds
-        self.sim.cpu.branch(101)
+        self.sim.cpu.branch(999)
         self.assertFalse(self.sim.cpu.running)
     def test_branchNeg_negative_accumulator(self):
         ## Expected to branch if the accumulator is negative 
@@ -55,6 +56,7 @@ class TestUVSIM(unittest.TestCase):
         self.assertFalse(self.sim.cpu.running)
     def test_halt_branch_after(self):
         ## Expected that after a halt call no other input is used.
+        self.sim.cpu.word_length = 4
         self.sim.memory.memory[0] = 4300
         self.sim.memory.memory[1] = 4015
         self.sim.cpu.execute()
@@ -62,6 +64,7 @@ class TestUVSIM(unittest.TestCase):
 
     def test_invalid_instruction_format(self):
         ## Expected that it should halt if there is a 5 digit number
+        self.sim.cpu.word_length = 6
         self.sim.memory.memory[0] = 99999  # Invalid 5-digit number
         with self.assertRaises(RuntimeError):
             self.sim.cpu.execute()

@@ -6,6 +6,9 @@ class Globals:
     MEMORYSIZE = 100
     MEMORYSIZE_LARGE = 250
 
+    MINWORDLEN = 4
+    MAXWORDLEN = 6
+
     DEFAULT_PRIMARY = "#4C721D"
     DEFAULT_OFF = "#FFFFFF"
 
@@ -15,3 +18,9 @@ class Globals:
 
     MODULO = 10000
     MODULO_LARGE = 1000000
+
+    DIVMOD_SMALL = 100
+    DIVMOD_LARGE = 1000
+
+    MEMORY_TABLE_SIZE = 10
+    
