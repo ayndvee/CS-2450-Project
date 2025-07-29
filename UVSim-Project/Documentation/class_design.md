@@ -579,10 +579,19 @@ The Globals class holds various global variables.
 -  MAX_VALUE : Placeholder for the maximum value an instruction in memory can hold, currently unused.
 -  MIN_VALUE : Placeholder for the minimum value an instruction in memory can hold, currently unused.
 -  STOP : Contains the value of the "end of file" instruction.
--  MEMORYSIZE : Contains the maximum size of a valid BasicML program.
+-  MEMORYSIZE : Contains the maximum size of a valid BasicML program with 4-digit words.
+-  MEMORYSIZE_LARGE : Contains the maximum size of a valid BasicML program with 6-digit words.
+-  MINWORDLEN : Contains the minimum size of a valid word, not including the sign.
+-  MAXWORDLEN : Contains the maximum size of a valid word, not including the sign.
 -  DEFAULT_PRIMARY : Contains the default primary color.
 -  DEFAULT_OFF : Contains the default off color.
+-  CONFIG_FILE : Contains the path for the config file, which holds the current theme settings.
 -  INTERVAL : Determines the amount of time between instruction execution as a program is running.
+-  MODULO : Contains the value used when handling overflow in the mathematical functions with a 4-digit word size.
+-  MODULO_LARGE : Contains the value used when handling overflow in the mathematical functions with a 6-digit word size.
+-  DIVMOD_SMALL : Contains the value used when separating the operand and value of a 4-digit word.
+-  DIVMOD_LARGE : Contains the value used when separating the operand and value of a 6-digit word.
+-  MEMORY_TABLE_SIZE : Contains the number of memory registers the gui can display at once.
 
 # Class TabManager
 
