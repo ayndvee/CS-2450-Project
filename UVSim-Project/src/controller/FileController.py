@@ -1,9 +1,10 @@
 from tkinter import filedialog
 from globals.Util import Globals
 class FileController:
-    def __init__(self, sim, view):
+    def __init__(self, sim, view, controller):
         self.sim = sim
         self.view = view
+        self.controller = controller
 
     def load_program(self):
         ##This opens up the file explorer for the user to select a file
@@ -25,6 +26,7 @@ class FileController:
 
                 editor_content = "".join(editor_lines)
                 text_widget = self.view.tab_manager.add_tab(title=filename, content = editor_content)
+                self.controller.reset(silent = True)
                 if self.sim.memory.load_program(memory_lines):
                     word_length = []
                     for line in memory_lines:

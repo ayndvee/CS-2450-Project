@@ -15,6 +15,7 @@ class TestUVSIM(unittest.TestCase):
         self.sim.cpu.running = True
         self.sim.cpu.instruction_count = 0
         self.sim.cpu.accumulator = 0
+        self.sim.memory.word_length = 4
 
     ## Here we would create the functions for testing each of our use cases.
 

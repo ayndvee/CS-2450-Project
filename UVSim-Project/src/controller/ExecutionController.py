@@ -24,6 +24,7 @@ class ExecutionController:
         if self.running:
             return  # Already running
         self.running = True
+        self.cpu.running = True
         self.paused = False
         self._execute_step()
 
@@ -85,13 +86,14 @@ class ExecutionController:
         self.view.print_output("Program has been paused")
 
     # Resets the simulator to its initial state
-    def reset(self):
+    def reset(self, silent= False):
         """Reset the simulator and display to the initial state."""
         self.running = False
         self.paused = False
         self.waiting_input = False
         self.cpu.reset()
-        self.view.print_output("Program has been reset.")
+        if not silent:
+            self.view.print_output("Program has been reset.")
         self.view.update_display()
 
     

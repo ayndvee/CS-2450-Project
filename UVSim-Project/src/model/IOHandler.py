@@ -1,5 +1,6 @@
 from globals.Util import Globals
 
+
 class IOHandler:
     def __init__(self, gui_mode: bool = False):
         self.gui = gui_mode
@@ -26,6 +27,6 @@ class IOHandler:
             return True
 
     def write(self, address: int, memory):
-        self.outputValue = f"{memory.get(address):+04d}"
+        self.outputValue = f"{memory.get(address):+0{memory.word_length+1}d}"
         self.output = True
         print(f"{memory.get(address)}")
