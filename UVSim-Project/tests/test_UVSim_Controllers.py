@@ -32,7 +32,7 @@ class TestUVSimController(unittest.TestCase):
         self.assertFalse(self.controller.running)
         self.assertFalse(self.controller.paused)
         self.assertFalse(self.controller.waiting_input)
-        self.assertEqual(self.sim.cpu.accumulator, 0)  # assuming cpu.reset resets accumulator
+        self.assertEqual(self.sim.cpu.accumulator, 0)
 
     def test_load_from_editor_valid_program(self):
         # Add a tab with valid instructions
