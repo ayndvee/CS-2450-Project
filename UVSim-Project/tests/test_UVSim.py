@@ -16,7 +16,6 @@ class TestUVSIM(unittest.TestCase):
         self.sim.instruction_count = 0
         self.sim.accumulator = 0
 
-    ## Here we would create the functions for testing each of our use cases.
 
 
    ## An example of what a unittest would look like
