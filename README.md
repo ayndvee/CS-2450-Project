@@ -1,19 +1,21 @@
 # UVSIM
 
 Version - V1.0
+
 Team Members - Anthony Gill, Brandon Walton, Andie Merino-Osorno
-Date - 
+
+Date - July 30th, 2025
 
 # Table of Contents
 - [Overview](#overview)
 - [Features](#features)
-- [Setup Instructions](#Setup-Instructions)
-- [Usage Guide](#Usage-Guide)
-- [Documentation](#Documentation)
-- [Testing](#Testing)
-- [Future Roadmap](#Future-Roadmap)
-- [Zenhub](#Zenhub)
-- [Summary](#Summary)
+- [Setup Instructions](#setup-instructions)
+- [Usage Guide](#usage-guide)
+- [Documentation](#documentation)
+- [Testing](#testing)
+- [Future Roadmap](#future-roadmap)
+- [Zenhub](#zenhub)
+- [Summary](#summary)
 
 # Overview
 UVSim is a command-line tool we built to simulate a simple virtual machine that runs programs written in a custom language called BasicML.
@@ -100,6 +102,7 @@ You will see the memory area, buttons, and input/output areas.
 ## 3. Editing Code
 - Edit directly in the text tab area
 - Multiple tabs can support managing different files
+
 ![Multiple Tabs image](UVSim-Project/Documentation/Images/Editing_image.PNG)
 ## 4. Running the Program
 - Use either the Run or the Step buttons to start the program
@@ -136,13 +139,13 @@ For this project we organized it by using the Model-View-Controller architecture
 - TabManager
 
 Additional Documentation:
-- Use cases/User Stories ![Use Cases/User Stories](UVSim-Project/Documentation//Design-Document.md)
-- Class Design: ![Class Design](UVSim-Project/Documentation/class_design.md)
-- SRS: ![SRS](UVSim-Project/Documentation/SRS_Final.md)
-- UML: ![UML](UVSim-Project/Documentation/UML_Design.md)
-- Wireframe: ![Wireframe](UVSim-Project/Documentation/Wireframe_UI.md)
-- Code Coverage Report: ![Code Coverage Report](UVSim-Project/Documentation/code_coverage.md)
-- Final System Test Report: ![Final System test report](UVSim-Project/Documentation/final_system_test_report.md)
+- Use cases/User Stories [Use Cases/User Stories](UVSim-Project/Documentation//Design-Document.md)
+- Class Design: [Class Design](UVSim-Project/Documentation/class_design.md)
+- SRS: [SRS](UVSim-Project/Documentation/SRS_Final.md)
+- UML: [UML](UVSim-Project/Documentation/UML_Design.md)
+- Wireframe: [Wireframe](UVSim-Project/Documentation/Wireframe_UI.md)
+- Code Coverage Report: [Code Coverage Report](UVSim-Project/Documentation/code_coverage.md)
+- Final System Test Report: [Final System test report](UVSim-Project/Documentation/final_system_test_report.md)
 
 # Testing
 - All of our unit tests are in the tests directory
@@ -157,10 +160,10 @@ Test Coverage includes:
 - Edge case handling
 
 Results of our test cases:
-UVSim: ![UVSim test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-spreadsheet.md)
-UVSimGUI: ![UVSim gui test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-gui-spreadsheet.md)
-UVSimController: ![UVSim controller test case](UVSim-Project/Documentation//unittest_spreadsheets/unit-tests-controller.md)
-UVSim Memory: ![UVSim memory test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-memory-spreadsheet.md)
+- UVSim: [UVSim test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-spreadsheet.md)
+- UVSimGUI: [UVSim gui test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-gui-spreadsheet.md)
+- UVSimController: [UVSim controller test case](UVSim-Project/Documentation//unittest_spreadsheets/unit-tests-controller.md)
+- UVSim Memory: [UVSim memory test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-memory-spreadsheet.md)
 ![Results of test cases](UVSim-Project/Documentation/Images/Testing_image.PNG)
 
 # Future Roadmap
@@ -171,10 +174,10 @@ UVSim Memory: ![UVSim memory test case](UVSim-Project/Documentation/unittest_spr
 We used Zenhub for our project tracking.
 We had used it to help split up the tasks and create issues for sections of each milestone.
 Here is a link to the zenhub board:
-![Zenhub Board](https://app.zenhub.com/workspaces/g1-6848914cee378d003143c970/board)
+[Zenhub Board](https://app.zenhub.com/workspaces/g1-6848914cee378d003143c970/board)
 Here is a picture of the board:
 ![Zenhub Board Picture](UVSim-Project/Documentation/Images/Zenhub_board_image.PNG)
 
 # Summary
 We have created a summary document of the project, it focuses on the performace, our main challenges, and key takeaways we had.
-![Project Summary](UVSim-Project/Documentation/Project_Summary.md)
+[Project Summary](UVSim-Project/Documentation/Project_Summary.md)
