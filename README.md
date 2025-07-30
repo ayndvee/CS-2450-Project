@@ -14,7 +14,7 @@ Date - July 30th, 2025
 - [Documentation](#documentation)
 - [Testing](#testing)
 - [Future Roadmap](#future-roadmap)
-- [Zenhub](#zenhub)
+- [Zenhub info](#zenhub-info)
 - [Summary](#summary)
 
 # Overview
@@ -170,7 +170,7 @@ Results of our test cases:
 - Add more support for breakpoints or step-through execution
 - Enhance the error feedback in the GUI
 
-# Zenhub
+# Zenhub Info
 We used Zenhub for our project tracking.
 We had used it to help split up the tasks and create issues for sections of each milestone.
 Here is a link to the zenhub board:
