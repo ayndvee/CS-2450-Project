@@ -182,7 +182,10 @@ Here is a picture of the board:
 
 # Presentation
 We created a presentation going over the basics of our project. IT includes an overview, requirements, functionality, and much more.
-Here is the link to our presentation about our project: [UVSIM Presentation](UVSim-Project/Documentation/Presentation/UVSim-presentation.pptx)
+
+Here is the link to our presentation about our project: [UVSIM Presentation](UVSim-Project/Documentation/Presentation/UVSim-Presentation.pptx)
+
+Here is the link in case that doesn't work: [Presentation Link](https://docs.google.com/presentation/d/1XrM8OKWD91WxS3EmjA8GUOqOsjgH6A-RQ7gEmtJ93w4/edit?pli=1&slide=id.p#slide=id.p)
 
 # Summary
 We have created a summary document of the project, it focuses on the performace, our main challenges, and key takeaways we had.
