@@ -43,8 +43,8 @@ By building it, we gained hands-on experience with program execution, control fl
     Clone the repository using:
     ```git clone https://github.com/ayndvee/CS-2450-Project.git```
 2. **Install Dependencies**
-    If you are using MacOS to ensure that all theme functionality works as intended we would suggest installing:
-    ```pip install tkmacosx```
+    If you are using MacOS to ensure that all theme functionality works as intended we would suggest running:
+    ``` pip install -r requirements.txt ```
     The program will still run without it, but all visual elements may not appread as intended
 3. **Running the Program**
     Run the program from the src folder. The program can be run in two different ways:
@@ -182,7 +182,7 @@ Here is a picture of the board:
 
 # Presentation
 We created a presentation going over the basics of our project. IT includes an overview, requirements, functionality, and much more.
-Here is the link to our presentation about our project: [UVSIM Presentation](https://docs.google.com/presentation/d/1XrM8OKWD91WxS3EmjA8GUOqOsjgH6A-RQ7gEmtJ93w4/edit?usp=sharing)
+Here is the link to our presentation about our project: [UVSIM Presentation](UVSim-Project/Documentation/Presentation/UVSim-presentation.pptx)
 
 # Summary
 We have created a summary document of the project, it focuses on the performace, our main challenges, and key takeaways we had.
