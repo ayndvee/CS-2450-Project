@@ -4,7 +4,7 @@ Version - V1.0
 
 Team Members - Anthony Gill, Brandon Walton, Andie Merino-Osorno
 
-Date - July 30th, 2025
+Date - July 31th, 2025
 
 # Table of Contents
 - [Overview](#overview)
@@ -15,6 +15,7 @@ Date - July 30th, 2025
 - [Testing](#testing)
 - [Future Roadmap](#future-roadmap)
 - [Zenhub info](#zenhub-info)
+- [Presentation](#presentation)
 - [Summary](#summary)
 
 # Overview
@@ -164,6 +165,7 @@ Results of our test cases:
 - UVSimGUI: [UVSim gui test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-gui-spreadsheet.md)
 - UVSimController: [UVSim controller test case](UVSim-Project/Documentation//unittest_spreadsheets/unit-tests-controller.md)
 - UVSim Memory: [UVSim memory test case](UVSim-Project/Documentation/unittest_spreadsheets/unit-tests-memory-spreadsheet.md)
+  
 ![Results of test cases](UVSim-Project/Documentation/Images/Testing_image.PNG)
 
 # Future Roadmap
@@ -178,6 +180,11 @@ Here is a link to the zenhub board:
 Here is a picture of the board:
 ![Zenhub Board Picture](UVSim-Project/Documentation/Images/Zenhub_board_image.PNG)
 
+# Presentation
+We created a presentation going over the basics of our project. IT includes an overview, requirements, functionality, and much more.
+Here is the link to our presentation about our project: [UVSIM Presentation](https://docs.google.com/presentation/d/1XrM8OKWD91WxS3EmjA8GUOqOsjgH6A-RQ7gEmtJ93w4/edit?usp=sharing)
+
 # Summary
 We have created a summary document of the project, it focuses on the performace, our main challenges, and key takeaways we had.
+
 [Project Summary](UVSim-Project/Documentation/Project_Summary.md)
