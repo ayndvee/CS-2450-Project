@@ -1,0 +1,7 @@
+# Retrospective Summary
+
+This project was a collaborative effort to build the UVSIM simulator to read BasicML instructions. It allowed us to work as a team to implent the needed features for handling memory, running the CPU, and creating a interactive GUI to show the simulation. We designed it using the Model-View-Controller (MVC) architecture to help keep things organized and more maintainable. Throughout the process we tried to follow software design principles to help us learn about them while also improving our project.
+
+## Performance
+
+The final product of the project runs smoothly with minimal stutters, even when given larger instruction amounts. The UVSIM regularly executed the programs as expected and our error handling caught most edge cases. We validated and tested most of the core functionality through unit testing. This gave us confidence to know that our main components such as instruction execution, memory reading/writing, and I/O handling were working as we expected them to. While using the GUI, it remained responsive, and all the buttons and widgets worked as intended. Although this version of UVSIM is designed for educational purposes, the MVC architecture used allows for the ability for it to be expanded easily. Overall the program is stable, responsive, and loads and resets programs quickly. This reflects the effort we took in designing, organizing, and testing our code throughout the project. 
