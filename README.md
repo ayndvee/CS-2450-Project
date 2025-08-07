@@ -169,8 +169,8 @@ Results of our test cases:
 ![Results of test cases](UVSim-Project/Documentation/Images/Testing_image.PNG)
 
 # Future Roadmap
-- Add more support for breakpoints or step-through execution
-- Enhance the error feedback in the GUI
+- Add more support for breakpoints or step-through execution to help users pause at specific memory addresses or instructions, enabling better debugging and instructional control. Visual indicators in the GUI could highlight the current instruction, and users could optionally step through execution one instruction at a time.
+- Enhance the error feedback in the GUI by providing clear, descriptive messages when invalid opcodes, operands, or inputs are encountered. This could include highlighting problematic memory cells, offering fix suggestions, and displaying real-time validation errors before program execution begins.
 
 # Zenhub Info
 We used Zenhub for our project tracking.
