@@ -1,10 +1,10 @@
 # UVSIM
 
-Version - V1.0
+Version - V1.0-Final
 
 Team Members - Anthony Gill, Brandon Walton, Andie Merino-Osorno
 
-Date - July 31th, 2025
+Date - August 7th, 2025
 
 # Table of Contents
 - [Overview](#overview)
@@ -171,6 +171,8 @@ Results of our test cases:
 # Future Roadmap
 - Add more support for breakpoints or step-through execution to help users pause at specific memory addresses or instructions, enabling better debugging and instructional control. Visual indicators in the GUI could highlight the current instruction, and users could optionally step through execution one instruction at a time.
 - Enhance the error feedback in the GUI by providing clear, descriptive messages when invalid opcodes, operands, or inputs are encountered. This could include highlighting problematic memory cells, offering fix suggestions, and displaying real-time validation errors before program execution begins.
+- Create a plugin system for opcodes which could allow for customizable instructions or adding new instructions. This could help create more community contributions as people could use other custom instruction sets.
+- We could also try to make a Web-based interface, which could remove the need for a local installation of the project. This could help more people use the app as well as test out new features that could be on the web.
 
 # Zenhub Info
 We used Zenhub for our project tracking.
